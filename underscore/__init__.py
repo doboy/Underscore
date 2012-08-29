@@ -5,28 +5,43 @@ import codegen
 import sys
 import transformers
 import visitors
+import environment
 
-def Underscore(code):
+def compile(filename, output_file=None, original=False):
+    code = open(filename).read()
+
+    global_frame = environment.Frame()
+
     tree = ast.parse(code)
-    visitor = visitors.Declarer()
+
+    visitor = visitors.Declarer(global_frame)
     visitor.visit(tree)
     
-    renamer = transformers.Renamer()
+    renamer = transformers.Renamer(global_frame)
     renamer.visit(tree)
     
-    return codegen.to_source(tree)
+    ret = codegen.to_source(tree)
+    if output_file:
+        with open(output_file, 'w') as out:
+            if original:
+                for line in code.splitlines():
+                    out.write('#  ' + line + '\n')
+                out.write('\n')
+            out.write(ret)
+            
+    return ret
 
-
-def Usage():
-    usage = """
-Usage: underscore [file]
-"""
-    print >>sys.stderr, usage
-    sys.exit(1)
-
+def usage():
+    print >>sys.stderr, (
+        "\n"
+        "Usage: underscore [file]"
+        "\n")
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        Usage()
+    if len(sys.argv) < 2:
+        usage()
+        sys.exit(1)
     else:
-        print Underscore(open(sys.argv[1]).read())
+        print compile(sys.argv[1])
+
+__all__ = ['compile']
