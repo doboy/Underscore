@@ -107,10 +107,8 @@ class SourceGenerator(NodeVisitor):
     def visit_Assign(self, node):
         self.newline(node)
         for idx, target in enumerate(node.targets):
-            if idx:
-                self.write(', ')
             self.visit(target)
-        self.write(' = ')
+            self.write(' = ')
         self.visit(node.value)
 
     def visit_AugAssign(self, node):
@@ -196,9 +194,10 @@ class SourceGenerator(NodeVisitor):
                 self.write(':')
                 self.body(node.body)
             else:
-                self.newline()
-                self.write('else:')
-                self.body(else_)
+                if else_:
+                    self.newline()
+                    self.write('else:')
+                    self.body(else_)
                 break
 
     def visit_For(self, node):
