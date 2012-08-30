@@ -8,6 +8,7 @@ class BaseVisitor(ast.NodeVisitor):
     __metaclass__ = AlsoMetaClass
         
     def __init__(self, env):
+        self.env = env
         self._global_frame = self._current_frame = env._global_frame
 
     def visit(self, node):

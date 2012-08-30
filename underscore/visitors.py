@@ -9,7 +9,7 @@ class Declarer(base.BaseVisitor):
         for arg in node.args:
             if isinstance(arg.ctx, ast.Param):
                 self.declare(arg.id)
-    
+
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_declare(target)
@@ -55,7 +55,6 @@ class Declarer(base.BaseVisitor):
         self.declare(node.id)
 
     def declare_Subscript(self, node):
-        # TODO DELETE THIS
         ast.NodeVisitor.generic_visit(self, node)
 
     @also('declare_List')

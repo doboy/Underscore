@@ -1,3 +1,4 @@
+import ast
 from collections import defaultdict
 
 class Declaration(object):
@@ -13,12 +14,33 @@ class Declaration(object):
             _ += '_'
 
 class Environment(object):
-    def __init__(self):
+    def __init__(self, tree):
         self.generator = Declaration.generateDeclaration()
         self._global_frame = Frame(env=self)
+        self._tree = tree
+        self._initial_assigns_node = None
 
-    def generateNextDeclartion(self):
+    def generateNextDeclaration(self):
         return self.generator.next()
+
+    def generateAndInjectNextDeclaration(self, old_name):
+        self._global_frame.add(old_name, global_=True)
+        new_name = self._global_frame[old_name].name
+
+        if self._initial_assigns_node is None:
+            self._initial_assigns_node = self.createInitialAssignNode()
+        
+        self._injectAssignment(self._initial_assigns_node, new_name, old_name)
+        return new_name
+
+    def _injectAssignment(self, node, left_name, right_name):
+        node.targets[0].elts.append(ast.Name(id=left_name, ctx=ast.Store()))
+        node.value.elts.append(ast.Name(id=right_name, ctx=ast.Load()))
+
+    def createInitialAssignNode(self):
+        node = ast.Assign(targets=[ast.Tuple(elts=[])], value=ast.Tuple(elts=[]))
+        self._tree.body = [node] + self._tree.body
+        return node
 
 class Frame(object):
     def __init__(self, parent=None, env=None):
@@ -30,7 +52,7 @@ class Frame(object):
             self.env = env
         else:
             raise ValueError('Invalid argument combintation')
-        self.declarations = defaultdict(self.env.generator.next)
+        self.declarations = defaultdict(self.env.generateNextDeclaration)
 
     def __contains__(self, name):
         return name in self.declarations
@@ -38,7 +60,7 @@ class Frame(object):
     def __getitem__(self, name):
         return self.declarations[name]
 
-    def add(self, name, global_):
+    def add(self, name, global_=False):
         """Add a declaration into declarations, this can be down just 
         by accessing the element. If the element is not in the dict
         generateId will be called. If it is in it generateId wont be called.

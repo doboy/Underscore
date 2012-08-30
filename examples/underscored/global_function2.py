@@ -9,10 +9,11 @@
 #  
 #  foo()
 
+(____,) = (False,)
 _ = 1
 
 def __():
-    if False:
+    if ____:
         _ = 2
     global _
     _ = 3

@@ -7,8 +7,9 @@ class Renamer(base.BaseVisitor):
 
     def getNewName(self, old_name):
         assert isinstance(old_name, str), old_name
-        new_name = self._current_frame.getNewName(old_name)
-        return new_name or old_name
+        new_name = (self._current_frame.getNewName(old_name) or 
+                    self.env.generateAndInjectNextDeclaration(old_name))
+        return new_name
         
     def visit_Assign(self, node):
         for target in node.targets:
@@ -35,20 +36,15 @@ class Renamer(base.BaseVisitor):
         specific_rename = 'rename_' + type(target).__name__
         getattr(self, specific_rename)(target)
 
-    def renames(self, names):
-        for i, name in enumerate(names):
-            names[i] = self.getNewName(name)
-        print names
-
     def rename_Global(self, node):
-        self.renames(node.names)
+        for i, name in enumerate(node.names):
+            node.names[i] = self.getNewName(name)
 
     def rename_Name(self, node):
         node.id = self.getNewName(node.id)
 
     def rename_Subscript(self, node):
-        # TODO DELETE THIS
-        ast.NodeVisitor.generic_visit(self, node)
+        base.BaseVisitor.generic_visit(self, node)
     
     @also('rename_List')
     def rename_Tuple(self, node):
