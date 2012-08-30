@@ -18,7 +18,9 @@ class Environment(object):
         self.generator = Declaration.generateDeclaration()
         self._global_frame = Frame(env=self)
         self._tree = tree
-        self._initial_assigns_node = None
+        self._constants = {}
+        self._constants_assign_node = None
+        self._initial_assign_node = None
 
     def generateNextDeclaration(self):
         return self.generator.next()
@@ -27,17 +29,34 @@ class Environment(object):
         self._global_frame.add(old_name, global_=True)
         new_name = self._global_frame[old_name].name
 
-        if self._initial_assigns_node is None:
-            self._initial_assigns_node = self.createInitialAssignNode()
+        if self._initial_assign_node is None:
+            self._initial_assign_node = self.createInitialAssignNode()
         
-        self._injectAssignment(self._initial_assigns_node, new_name, old_name)
+        self._injectAssignment(self._initial_assign_node, new_name, old_name)
         return new_name
+
+    def InjectConstant(self, node, constant):
+        if constant not in self._constants:
+            if self._constants_assign_node is None:
+                self._constants_assign_node = self.createInitialConstantNode()
+            declaration = self.generateNextDeclaration()
+            self._constants[constant] = declaration.name
+            self._injectAssignment(self._constants_assign_node, declaration.name, str(constant))
 
     def _injectAssignment(self, node, left_name, right_name):
         node.targets[0].elts.append(ast.Name(id=left_name, ctx=ast.Store()))
         node.value.elts.append(ast.Name(id=right_name, ctx=ast.Load()))
 
+    def _injectConstantAssignment(self, node, left_name, constant):
+        node.targets[0].elts.append(ast.Name(id=left_name, ctx=ast.Store()))
+        node.value.elts.append(constant)
+
     def createInitialAssignNode(self):
+        node = ast.Assign(targets=[ast.Tuple(elts=[])], value=ast.Tuple(elts=[]))
+        self._tree.body = [node] + self._tree.body
+        return node
+
+    def createInitialConstantNode(self):
         node = ast.Assign(targets=[ast.Tuple(elts=[])], value=ast.Tuple(elts=[]))
         self._tree.body = [node] + self._tree.body
         return node

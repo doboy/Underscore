@@ -6,9 +6,11 @@
 #  
 #  print fact(5)
 
+(___, ____) = (1, 5)
+
 def _(__):
-    if (__ <= 1):
-        return 1
+    if (__ <= ___):
+        return ___
     else:
-        return __ * _(__ - 1)
-print _(5)
+        return __ * _(__ - ___)
+print _(____)
