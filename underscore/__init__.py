@@ -7,14 +7,14 @@ import environment
 def _(filename, output_file=None, original=False):
     code = open(filename).read()
 
-    global_frame = environment.Frame()
+    env = environment.Environment()
 
     tree = ast.parse(code)
 
-    visitor = visitors.Declarer(global_frame)
+    visitor = visitors.Declarer(env)
     visitor.visit(tree)
     
-    renamer = transformers.Renamer(global_frame)
+    renamer = transformers.Renamer(env)
     renamer.visit(tree)
     
     ret = codegen.to_source(tree)

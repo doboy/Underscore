@@ -7,7 +7,7 @@ class Renamer(base.BaseVisitor):
 
     def getNewName(self, old_name):
         assert isinstance(old_name, str), old_name
-        new_name = self._current_frame.getId(old_name)
+        new_name = self._current_frame.getNewName(old_name)
         return new_name or old_name
         
     def visit_Assign(self, node):
@@ -15,15 +15,17 @@ class Renamer(base.BaseVisitor):
             self.generic_rename(target)
         ast.NodeVisitor.generic_visit(self, node.value)
 
+    @also('visit_FunctionDef')
     def visit_ClassDef(self, node):
         node.name = self.getNewName(node.name)
-        with self.extendFrame(node):
-            ast.NodeVisitor.generic_visit(self, node)
-
-    def visit_FunctionDef(self, node):
-        node.name = self.getNewName(node.name)
-        with self.extendFrame(node):
+        with self.Frame(node):
             self.generic_visit(node)
+
+    @also('visit_ImportFrom')
+    def visit_Import(self, node):
+        for alias in node.names:
+            assert alias.asname is not None
+            alias.asname = self.getNewName(alias.asname)
 
     @also('visit_Name')
     def visit_Global(self, node):

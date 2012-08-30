@@ -1,15 +1,36 @@
 from collections import defaultdict
 
-def generateId():
-    count = 1
-    while True:
-        yield '_' * count
-        count += 1
+class Declaration(object):
+    def __init__(self, name):
+        self.name = name
+        self.global_ = False
+    
+    @staticmethod
+    def generateDeclaration():
+        _ = '_'
+        while True:
+            yield Declaration(_)
+            _ += '_'
 
 class Environment(object):
-    def __init__(self, parent=None):
-        self.parent = parent
-        self.declarations = defaultdict(generateId().next)
+    def __init__(self):
+        self.generator = Declaration.generateDeclaration()
+        self._global_frame = Frame(env=self)
+
+    def generateNextDeclartion(self):
+        return self.generator.next()
+
+class Frame(object):
+    def __init__(self, parent=None, env=None):
+        if parent is not None:
+            self.parent = parent
+            self.env = parent.env
+        elif env is not None:
+            self.parent = None
+            self.env = env
+        else:
+            raise ValueError('Invalid argument combintation')
+        self.declarations = defaultdict(self.env.generator.next)
 
     def __contains__(self, name):
         return name in self.declarations
@@ -17,22 +38,27 @@ class Environment(object):
     def __getitem__(self, name):
         return self.declarations[name]
 
-    def add(self, name):
+    def add(self, name, global_):
         """Add a declaration into declarations, this can be down just 
         by accessing the element. If the element is not in the dict
         generateId will be called. If it is in it generateId wont be called.
         """
-        self.declarations[name]
+        self.declarations[name].global_ |= global_
 
-    def getId(self, name):
+    def getNewName(self, name):
         """Returns an unique id, variables scoped differently will have 
         different ids even if they have the same name. Returns None if
         we cannot find the declaration of the name, meaning either built-in, 
         (from blah import *)ed or misstyped.
         """
-        env = self._LookUpEnv(name)
-        if env:
-            return env[name]
+        try:
+            frame = self._LookUpEnv(name)
+            declaration = frame[name]
+            if declaration.global_:
+                declaration = frame.env._global_frame[name]
+            return declaration.name
+        except TypeError as e:
+            pass
 
     def _LookUpEnv(current_env, name):
         """Returns the environment that contains the defintion of name."""
@@ -41,6 +67,3 @@ class Environment(object):
                 return current_env
             else:
                 current_env = current_env.parent
-    
-# Alias Frame and Environment
-Frame = Environment

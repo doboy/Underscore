@@ -9,17 +9,45 @@
 """
 from ast import *
 
-BINOP_SYMBOLS = {Add: '+', 
-                 Sub: '-',
-                 Mult: '*',
-                 }
+BOOLOP_SYMBOLS = {
+    And:        'and',
+    Or:         'or'
+}
+ 
+BINOP_SYMBOLS = {
+    Add:        '+',
+    Sub:        '-',
+    Mult:       '*',
+    Div:        '/',
+    FloorDiv:   '//',
+    Mod:        '%',
+    LShift:     '<<',
+    RShift:     '>>',
+    BitOr:      '|',
+    BitAnd:     '&',
+    BitXor:     '^'
+}
+ 
+CMPOP_SYMBOLS = {
+    Eq:         '==',
+    Gt:         '>',
+    GtE:        '>=',
+    In:         'in',
+    Is:         'is',
+    IsNot:      'is not',
+    Lt:         '<',
+    LtE:        '<=',
+    NotEq:      '!=',
+    NotIn:      'not in'
+}
+ 
+UNARYOP_SYMBOLS = {
+    Invert:     '~',
+    Not:        'not',
+    UAdd:       '+',
+    USub:       '-'
+}
 
-CMPOP_SYMBOLS = {Gt: '>',
-                 Lt: '<',
-                 LtE: '<=',
-                 GtE: '>=',
-                 Eq: '==',
-                 }
 
 def to_source(node, indent_with=' ' * 4, add_line_information=False):
     """This function can convert a node tree back into python sourcecode.
@@ -41,6 +69,7 @@ def to_source(node, indent_with=' ' * 4, add_line_information=False):
     """
     generator = SourceGenerator(indent_with, add_line_information)
     generator.visit(node)
+    # print generator.result # <<<<
     return ''.join(generator.result)
 
 
@@ -130,17 +159,17 @@ class SourceGenerator(NodeVisitor):
 
     def visit_ImportFrom(self, node):
         self.newline(node)
-        self.write('from %s%s import ' % ('.' * node.level, node.module))
-        for idx, item in enumerate(node.names):
-            if idx:
-                self.write(', ')
-            self.write(item)
+        for item in node.names:
+            self.write('from %s%s import ' % ('.' * node.level, node.module))
+            self.visit(item)
+            self.newline(node)
 
     def visit_Import(self, node):
         self.newline(node)
         for item in node.names:
             self.write('import ')
             self.visit(item)
+            self.newline(node)
 
     def visit_Expr(self, node):
         self.newline(node)
