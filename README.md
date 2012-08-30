@@ -39,11 +39,12 @@ print fib(10)
 ```python
 # _fib.py
 
+(_______,) = (xrange,)
 from operator import add as _
 
 def __(___):
     (____, _____) = (0, 1)
-    for ______ in xrange(___):
+    for ______ in _______(___):
         (____, _____) = (_____, _(____, _____))
     return _____
 print __(10)

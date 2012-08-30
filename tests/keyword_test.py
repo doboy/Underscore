@@ -6,7 +6,6 @@ from nose import tools as nt
 from underscore import _
 
 KEYWORDS = set(kwlist)
-BUILT_INS = {'None', 'False', 'True', 'type'}
 IDENTIFER_REGEX = '[a-zA-Z][a-zA-Z0-9]*'
 
 def testGenerator():
@@ -24,6 +23,6 @@ def _testFile(filename):
         if lineno == 0 or 'import' in identifers:
             continue
         for identifer in identifers:
-            nt.assert_in(identifer, KEYWORDS | BUILT_INS, 
+            nt.assert_in(identifer, KEYWORDS,
                          error_msg.format(id=identifer, lineno=lineno))
 
