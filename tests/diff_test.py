@@ -2,7 +2,6 @@
 
 import nose.tools as nt
 import glob
-import traceback
 import os.path
 import underscore
 import sys
@@ -16,6 +15,7 @@ def testGenerator():
 def _testFile(original_file):
     underscored_file = os.path.join('examples', 'underscored', 
                                os.path.basename(original_file))
+    underscore.compile(original_file, underscored_file, True)
     expected_output = _execute(original_file)
     actual_output = _execute(underscored_file)
     nt.assert_equal(actual_output, expected_output)

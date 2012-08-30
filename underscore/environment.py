@@ -3,7 +3,7 @@ from collections import defaultdict
 def generateId():
     count = 1
     while True:
-        yield count
+        yield '_' * count
         count += 1
 
 class Environment(object):

@@ -1,6 +1,6 @@
 #  a = 1
 #  
-#  def bar(a, b):
+#  def bar(b, a):
 #      print a, b
 #  
 #  print a
@@ -8,7 +8,7 @@
 
 _ = 1
 
-def __(_, b):
-    print _, b
+def __(_, __):
+    print __, _
 print _
 __(2, 3)

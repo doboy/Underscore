@@ -1,58 +1,53 @@
-import ast, environment
+import ast
+import base
 
-class Renamer(ast.NodeVisitor):
-    def __init__(self, current_frame=None):
-        if current_frame is None:
-            current_frame = environment.Frame()
-        self._global_frame = self._current_frame = current_frame
+from also import also
 
-    def withdrawFrame(self):
-        self._current_frame = self._current_frame.parent
+class Renamer(base.BaseVisitor):
 
+    def getNewName(self, old_name):
+        assert isinstance(old_name, str), old_name
+        new_name = self._current_frame.getId(old_name)
+        return new_name or old_name
+        
     def visit_Assign(self, node):
-        self.generic_renames(node.targets)
+        for target in node.targets:
+            self.generic_rename(target)
+
+    def visit_ClassDef(self, node):
+        node.name = self.getNewName(node.name)
+        with self.extendFrame(node):
+            ast.NodeVisitor.generic_visit(self, node)
 
     def visit_FunctionDef(self, node):
-        _id = self._current_frame.getId(node.name)
-        if _id is not None:
-            node.name = '_' * _id
-        self._current_frame = node.frame
-        ast.NodeVisitor.generic_visit(self, node)
-        self._current_frame = node.frame.parent
+        node.name = self.getNewName(node.name)
+        with self.extendFrame(node):
+            self.generic_visit(node)
 
-    def visit_Name(self, node):
-        self.rename_Name(node)
-
+    @also('visit_Name')
     def visit_Global(self, node):
         self.generic_rename(node)
-
-    def generic_renames(self, targets):
-        for target in targets:
-            self.generic_rename(target)
 
     def generic_rename(self, target):
         specific_rename = 'rename_' + type(target).__name__
         getattr(self, specific_rename)(target)
 
+    def renames(self, names):
+        for i, name in enumerate(names):
+            names[i] = self.getNewName(name)
+        print names
+
     def rename_Global(self, node):
-        for idx in xrange(len(node.names)):
-            name = node.names[idx]
-            _id = self._global_frame.getId(name)
-            if _id is not None:
-                node.names[idx] = '_' * _id 
+        self.renames(node.names)
 
     def rename_Name(self, node):
-        _id = self._current_frame.getId(node.id)
-        # _id is None if we were unable to retrive the name
-        if _id is not None:
-            node.id = '_' * _id
+        node.id = self.getNewName(node.id)
 
     def rename_Subscript(self, node):
-        # subscriptions do not bind declaration, so carry on..
+        # TODO DELETE THIS
         ast.NodeVisitor.generic_visit(self, node)
-
+    
+    @also('rename_List')
     def rename_Tuple(self, node):
         for element in node.elts:
             self.generic_rename(element)
-
-    rename_List = rename_Tuple

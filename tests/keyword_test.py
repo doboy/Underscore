@@ -5,7 +5,7 @@ import glob
 import underscore
 import re
 
-KEYWORDS = {'def', 'pass', 'print', 'global', 'if'}
+KEYWORDS = {'def', 'pass', 'print', 'global', 'if', 'class'}
 BUILTINS = {'True', 'False', 'None'}
 IDENTIFER_REGEX = '[a-zA-Z][a-zA-Z0-9]*'
 
@@ -15,5 +15,6 @@ def testGenerator():
 
 def _testFile(filename):
     underscored = underscore.compile(filename)
-    for id in re.findall(IDENTIFER_REGEX, underscored):
-        nt.assert_not_in('invalid indentifier ' + id, KEYWORDS | BUILTINS)
+    for _id in re.findall(IDENTIFER_REGEX, underscored):
+        nt.assert_in(_id, KEYWORDS | BUILTINS, 
+                     'Id "{id}" did not get converted'.format(id=_id))

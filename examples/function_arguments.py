@@ -1,6 +1,6 @@
 a = 1
 
-def bar(a, b):
+def bar(b, a):
     print a, b
 
 print a
