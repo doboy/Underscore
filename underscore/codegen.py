@@ -9,7 +9,17 @@
 """
 from ast import *
 
-BINOP_SYMBOLS = {Add: '+'}
+BINOP_SYMBOLS = {Add: '+', 
+                 Sub: '-',
+                 Mult: '*',
+                 }
+
+CMPOP_SYMBOLS = {Gt: '>',
+                 Lt: '<',
+                 LtE: '<=',
+                 GtE: '>=',
+                 Eq: '==',
+                 }
 
 def to_source(node, indent_with=' ' * 4, add_line_information=False):
     """This function can convert a node tree back into python sourcecode.
@@ -404,9 +414,9 @@ class SourceGenerator(NodeVisitor):
 
     def visit_Compare(self, node):
         self.write('(')
-        self.write(node.left)
+        self.visit(node.left)
         for op, right in zip(node.ops, node.comparators):
-            self.write(' %s %%' % CMPOP_SYMBOLS[type(op)])
+            self.write(' %s ' % CMPOP_SYMBOLS[type(op)])
             self.visit(right)
         self.write(')')
 

@@ -6,7 +6,7 @@ from underscore import _
 def usage():
     print >>sys.stderr, (
         "\n"
-        "Usage: _ [file]"
+        "Usage: _ file.py > _file.py"
         "\n")
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ pip install underscore
 
 ## Usage
 ```
-$ _ [file] > _file.py
+$ _ file.py > _file.py
 ```
 You can also compile through python
 ```python
