@@ -5,8 +5,8 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name="Dunderscore",
-    version="0.0.1",
+    name="Underscore",
+    version="0.0.30000001",
     packages=["underscore"],
     author="Huan Do",
     author_email="doboy0@gmail.com",

@@ -1,6 +1,5 @@
 import ast
 import codegen
-import sys
 import transformers
 import visitors
 import environment
