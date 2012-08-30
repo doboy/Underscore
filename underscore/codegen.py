@@ -9,6 +9,7 @@
 """
 from ast import *
 
+BINOP_SYMBOLS = {Add: '+'}
 
 def to_source(node, indent_with=' ' * 4, add_line_information=False):
     """This function can convert a node tree back into python sourcecode.

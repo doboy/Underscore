@@ -13,6 +13,7 @@ class Renamer(base.BaseVisitor):
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_rename(target)
+        ast.NodeVisitor.generic_visit(self, node.value)
 
     def visit_ClassDef(self, node):
         node.name = self.getNewName(node.name)

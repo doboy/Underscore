@@ -8,11 +8,16 @@ class Declarer(base.BaseVisitor):
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_declare(target)
+        ast.NodeVisitor.generic_visit(self, node)
 
     def visit_ClassDef(self, node):
         self.declare(node.name)
         with self.extendFrame(node):
             ast.NodeVisitor.generic_visit(self, node)
+
+    def visit_For(self, node):
+        self.generic_declare(node.target)
+        ast.NodeVisitor.generic_visit(self, node)
 
     def visit_FunctionDef(self, node):
         self.declare(node.name)

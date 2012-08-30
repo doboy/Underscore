@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import ast
 import codegen
 import sys
@@ -7,7 +5,7 @@ import transformers
 import visitors
 import environment
 
-def compile(filename, output_file=None, original=False):
+def _(filename, output_file=None, original=False):
     code = open(filename).read()
 
     global_frame = environment.Frame()
@@ -30,18 +28,3 @@ def compile(filename, output_file=None, original=False):
             out.write(ret)
             
     return ret
-
-def usage():
-    print >>sys.stderr, (
-        "\n"
-        "Usage: underscore [file]"
-        "\n")
-
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        usage()
-        sys.exit(1)
-    else:
-        print compile(sys.argv[1])
-
-__all__ = ['compile']
