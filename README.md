@@ -60,3 +60,14 @@ There are three flavors of tests all driven by the `nosetests` framework, to add
   * This test makes sure that there are not any empty files in the example folder.
 * `tests/keyword_test.py`
   * This test makes sure that we are only using keywords and not using non `underscore` variables where possible
+* `tests/meta_test.py` (Not ready yet)
+  * This test will turn the source code into underscored code, then with the underscored code we will turn the source code into underscored code again.. and check that the `source` and `output` are the same.. I know mind blowing..
+
+## Roadmap
+This project was started on Aug 28th, 2012. And is still under development. There is lots of things to do.. here is a `TODO` list for myself
+* Refactor
+* Give out warnings if users are using `exec` as this may lead to incorrect behavior.
+* Handle attributes.
+* Handle with statements
+* Handle exception statements
+* Turn the source into obfuscate code, and make sure it executes the same behavior.
