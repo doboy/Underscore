@@ -41,7 +41,7 @@ class Environment(object):
                 self._constants_assign_node = self.createInitialConstantNode()
             declaration = self.generateNextDeclaration()
             self._constants[constant] = declaration.name
-            self._injectAssignment(self._constants_assign_node, declaration.name, str(constant))
+            self._injectAssignment(self._constants_assign_node, declaration.name, repr(constant))
 
     def _injectAssignment(self, node, left_name, right_name):
         node.targets[0].elts.append(ast.Name(id=left_name, ctx=ast.Store()))

@@ -14,7 +14,7 @@ class Renamer(base.BaseVisitor):
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_rename(target)
-        ast.NodeVisitor.generic_visit(self, node.value)
+        self.visit(node.value)
 
     @also('visit_FunctionDef')
     def visit_ClassDef(self, node):

@@ -1,4 +1,4 @@
-Underscore
+Underscore  [![Build Status](https://secure.travis-ci.org/Doboy/Underscore.png?branch=master)](http://travis-ci.org/Doboy/Underscore)
 ==========
 Obfuscating code by changing the variable names to underscores
 
@@ -52,6 +52,11 @@ print __(__________)
 ```
 
 ## Tests
-```
-nosetests
-```
+There are three flavors of tests all driven by the `nosetests` framework, to add a test simply add a python file into the `examples` folder. When running the test command, `nosetests` each test will run for each file in the `examples` folder.
+
+* `tests/diff_test.py`
+  * This test makes sure that the output of the original file matches the output of the compiled file when ran.
+* `tests/empty_test.py`
+  * This test makes sure that there are not any empty files in the example folder.
+* `tests/keyword_test.py`
+  * This test makes sure that we are only using keywords and not using non `underscore` variables where possible
