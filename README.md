@@ -2,22 +2,6 @@ Underscore  [![Build Status](https://secure.travis-ci.org/Doboy/Underscore.png?b
 ==========
 Obfuscating code by changing the variable names to underscores
 
-## Installation
-```
-pip install underscore
-```
-
-## Usage
-```
-$ _ file.py > _file.py
-```
-You can also compile through python
-```python
-from underscore import _
-
-_(filename, output_filename)
-```
-
 ## Example
 
 ###### Input
@@ -49,6 +33,22 @@ def __(___):
         (____, _____) = (_____, _(____, _____))
     return _____
 print __(__________)
+```
+
+## Installation
+```
+pip install underscore
+```
+
+## Usage
+```
+$ _ file.py > _file.py
+```
+You can also compile through python
+```python
+from underscore import _
+
+_(filename, output_filename)
 ```
 
 ## Tests
