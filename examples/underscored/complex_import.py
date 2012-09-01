@@ -12,3 +12,4 @@ from ast import Add as ___
 from ast import Sub as ____
 print _____(___), ______(____)
 print _______(_), ________(__)
+(Add, ast, bar, sub) = (___, _, __, ____)

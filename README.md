@@ -23,13 +23,13 @@ print fib(10)
 ```python
 # _fib.py
 
-(_________,) = (xrange,)
-(_______, ________, __________) = (0, 1, 10)
+(________, _________, __________) = (0, 1, 10)
+(_______,) = (xrange,)
 from operator import add as _
 
 def __(___):
-    (____, _____) = (_______, ________)
-    for ______ in _________(___):
+    (____, _____) = (________, _________)
+    for ______ in _______(___):
         (____, _____) = (_____, _(____, _____))
     return _____
 print __(__________)
@@ -65,9 +65,12 @@ There are three flavors of tests all driven by the `nosetests` framework, to add
 
 ## Roadmap
 This project was started on Aug 28th, 2012. And is still under development. There is lots of things to do.. here is a `TODO` list for myself
-* Refactor
+* ~~Refactor~~
 * Give out warnings if users are using `exec` as this may lead to incorrect behavior.
-* Handle attributes.
-* Handle with statements
-* Handle exception statements
+* ~~Handle attributes~~.
+* ~~Handle with statements~~
+* ~~Handle exception statements~~
+* Handle decorators
+* ~~Handle class methods~~
 * Turn the source into obfuscate code, and make sure it executes the same behavior.
+* Handle the case where input has underscored variables

@@ -14,3 +14,4 @@ def __():
     print ___
 print _
 __()
+(car, x) = (__, _)

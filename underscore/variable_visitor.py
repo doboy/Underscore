@@ -1,13 +1,16 @@
 import ast
 import base
+import environment
+import frame
 
 from also import also
 from collections import deque
+from utils import AssignmentManager
 
 class VariableVisitor(object):
     def __init__(self, env):
         self.env = env
-        self._assignmentManager = base.AssignmentManager()
+        self._assignmentManager = AssignmentManager()
 
     def visit(self, tree):
         _VariableFinder(self.env, self._assignmentManager
@@ -46,11 +49,25 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
             self.generic_declare(target)
         ast.NodeVisitor.generic_visit(self, node)
 
+    @also('visit_Module')
     @also('visit_FunctionDef')
     def visit_ClassDef(self, node):
-        self.declare(node.name)
+        if type(node) != ast.Module:
+            self.declare(node.name)
         with self.extendFrame(node):
             self.visit_queue.append(node)
+
+    def visit_ExceptHandler(self, node):
+        if node.name:
+            self.declare_Name(node.name)
+
+    def visit_For(self, node):
+        self.generic_declare(node.target)
+        ast.NodeVisitor.generic_visit(self, node)
+
+    def visit_Global(self, node):
+        for name in node.names:
+            self.declare(name, _global=True)
 
     @also('visit_ImportFrom')
     def visit_Import(self, node):
@@ -59,20 +76,9 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
                 alias.asname = alias.name
             self.declare(alias.asname)
 
-    def visit_For(self, node):
-        self.generic_declare(node.target)
-        ast.NodeVisitor.generic_visit(self, node)
-
-    def visit_FunctionDef(self, node):
-        self.declare(node.name)
-        with self.extendFrame(node):
-            for arg in node.args.args:
-                self.generic_declare(arg)
-            self.visit_queue.append(node)
-
-    def visit_Global(self, node):
-        for name in node.names:
-            self.declare(name, _global=True)
+    def visit_With(self, node):
+        if node.optional_vars:
+            self.generic_declare(node.optional_vars)
 
     def generic_declare(self, target):
         specific_declare = 'declare_' + type(target).__name__
@@ -117,10 +123,30 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
             self.generic_rename(target)
         self.visit(node.value)
 
-    @also('visit_FunctionDef')
+    def visit_FunctionDef(self, node):
+        if type(self._current_frame) != frame.ClassFrame:
+            node.name = self.getNewName(node.name)
+        with self.Frame(node):
+            self.generic_visit(node)
+
+    def visit_Module(self, node):
+        with self.Frame(node) as f:
+            self.generic_visit(node)
+            declAssignNode = f.declarationsAssignNode()
+            if declAssignNode:
+                node.body.append(declAssignNode)
+
     def visit_ClassDef(self, node):
         node.name = self.getNewName(node.name)
-        with self.Frame(node):
+        with self.Frame(node) as f:
+            self.generic_visit(node)
+            declAssignNode = f.declarationsAssignNode()
+            if declAssignNode:
+                node.body.append(declAssignNode)
+
+    def visit_FunctionDef(self, node):
+        node.name = self.getNewName(node.name)
+        with self.Frame(node) as f:
             self.generic_visit(node)
 
     @also('visit_ImportFrom')

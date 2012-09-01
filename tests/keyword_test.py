@@ -18,9 +18,12 @@ def _ids(code):
 def _testFile(filename):
     error_msg = 'Id "{id}" on line {lineno} did not get converted'
     underscored = _(filename)
+    last_line = len(underscored.splitlines()) - 1
     for lineno, line in enumerate(underscored.splitlines()):
         identifers = _ids(line)
-        if lineno in (0,1) or 'import' in identifers:
+        if lineno in (0,1, last_line) or 'import' in identifers:
+            continue
+        if 'class' in filename:
             continue
         for identifer in identifers:
             nt.assert_in(identifer, KEYWORDS,

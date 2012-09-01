@@ -6,3 +6,4 @@
 class _:
     pass
 _()
+(Bar,) = (_,)

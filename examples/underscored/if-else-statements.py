@@ -18,3 +18,4 @@ elif (_ == __):
     print _
 else:
     print _, __
+(x, y) = (_, __)

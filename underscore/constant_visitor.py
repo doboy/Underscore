@@ -1,6 +1,8 @@
 import ast
 import base
 
+from utils import AssignmentManager
+
 class ConstantVisitor(object):
     """Rename all constants and takes a note of it, so that
     in the final phase we can inject an assignment node that 
@@ -8,7 +10,7 @@ class ConstantVisitor(object):
     """
     def __init__(self, env):
         self.env = env
-        self._assignmentManager = base.AssignmentManager()
+        self._assignmentManager = AssignmentManager()
         
     def visit(self, tree):
         _ConstantFinder(self.env, self._assignmentManager

@@ -1,20 +1,27 @@
 #  from operator import add
 #  
-#  def fib(n):
-#      a, b = 0, 1
-#      for i in xrange(n):
-#          a, b = b, add(a, b)
-#      return b
+#  class Fibber(object):
+#      
+#      def fib(n):
+#          a, b = 0, 1
+#          for i in xrange(n):
+#              a, b = b, add(a, b)
+#          return b
 #  
-#  print fib(10)
+#  print Fibber().fib(10)
 
-(________, _________, __________) = (0, 1, 10)
-(_______,) = (xrange,)
+(__________, ___________, ____________) = (0, 1, 10)
+(________, _________) = (object, xrange)
 from operator import add as _
 
-def __(___):
-    (____, _____) = (________, _________)
-    for ______ in _______(___):
-        (____, _____) = (_____, _(____, _____))
-    return _____
-print __(__________)
+
+class __(________):
+
+    def ___(____):
+        (_____, ______) = (__________, ___________)
+        for _______ in _________(____):
+            (_____, ______) = (______, _(_____, ______))
+        return ______
+    (fib,) = (___,)
+print __().fib(____________)
+(Fibber, add) = (__, _)

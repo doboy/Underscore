@@ -14,3 +14,4 @@ def _(__):
     else:
         return __ * _(__ - ___)
 print _(____)
+(fact,) = (_,)
