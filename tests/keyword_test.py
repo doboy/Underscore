@@ -23,9 +23,8 @@ def _testFile(filename):
         identifers = _ids(line)
         if lineno in (0,1, last_line) or 'import' in identifers:
             continue
-        if 'class' in filename:
+        if 'class' in filename or 'readme' in filename or 'underscored' in filename:
             continue
         for identifer in identifers:
             nt.assert_in(identifer, KEYWORDS,
                          error_msg.format(id=identifer, lineno=lineno))
-

@@ -2,6 +2,7 @@ from operator import add
 
 class Fibber(object):
     
+    @staticmethod
     def fib(n):
         a, b = 0, 1
         for i in xrange(n):

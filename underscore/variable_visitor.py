@@ -91,6 +91,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
     def declare_Name(self, node):
         self.declare(node.id)
 
+    @also('declare_Attribute')
     def declare_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)
 
@@ -170,8 +171,9 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
     def rename_Name(self, node):
         node.id = self.getNewName(node.id)
 
+    @also('rename_Attribute')
     def rename_Subscript(self, node):
-        base.BaseVisitor.generic_visit(self, node)
+        ast.NodeVisitor.generic_visit(self, node)
     
     @also('rename_List')
     def rename_Tuple(self, node):

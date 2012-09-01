@@ -10,29 +10,38 @@ Obfuscating code by changing the variable names to underscores
 
 from operator import add
 
-def fib(n):
-    a, b = 0, 1
-    for i in xrange(n):
-        a, b = b, add(a, b)
-    return b
+class Fibber(object):
+    
+    @staticmethod
+    def fib(n):
+        a, b = 0, 1
+        for i in xrange(n):
+            a, b = b, add(a, b)
+        return b
 
-print fib(10)
+print Fibber().fib(10)
 ```
 
 ###### Output
 ```python
 # _fib.py
 
-(________, _________, __________) = (0, 1, 10)
-(_______,) = (xrange,)
+(___________, ____________, _____________) = (0, 1, 10)
+(________, _________, __________) = (object, xrange, staticmethod)
 from operator import add as _
 
-def __(___):
-    (____, _____) = (________, _________)
-    for ______ in _______(___):
-        (____, _____) = (_____, _(____, _____))
-    return _____
-print __(__________)
+
+class __(________):
+
+    @__________
+    def ___(____):
+        (_____, ______) = (___________, ____________)
+        for _______ in _________(____):
+            (_____, ______) = (______, _(_____, ______))
+        return ______
+    (fib,) = (___,)
+print __().fib(_____________)
+(Fibber, add) = (__, _)
 ```
 
 ## Installation
@@ -66,11 +75,12 @@ There are three flavors of tests all driven by the `nosetests` framework, to add
 ## Roadmap
 This project was started on Aug 28th, 2012. And is still under development. There is lots of things to do.. here is a `TODO` list for myself
 * ~~Refactor~~
-* Give out warnings if users are using `exec` as this may lead to incorrect behavior.
 * ~~Handle attributes~~.
 * ~~Handle with statements~~
 * ~~Handle exception statements~~
-* Handle decorators
+* ~~Handle decorators~~
 * ~~Handle class methods~~
+* ~~Handle the case where input has underscored variables~~
+* Give out warnings if users are using `exec` as this may lead to incorrect behavior.
 * Turn the source into obfuscate code, and make sure it executes the same behavior.
-* Handle the case where input has underscored variables
+
