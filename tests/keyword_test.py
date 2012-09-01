@@ -20,7 +20,7 @@ def _testFile(filename):
     underscored = _(filename)
     for lineno, line in enumerate(underscored.splitlines()):
         identifers = _ids(line)
-        if lineno == 0 or 'import' in identifers:
+        if lineno in (0,1) or 'import' in identifers:
             continue
         for identifer in identifers:
             nt.assert_in(identifer, KEYWORDS,

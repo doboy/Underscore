@@ -11,6 +11,7 @@ class Declaration(object):
     def generateDeclaration():
         _ = '_'
         while True:
+            # yield Declaration('_' + str(len(_)))
             yield Declaration(_)
             _ += '_'
 
@@ -26,7 +27,8 @@ class Environment(object):
     def __init__(self, tree):
         self._generator = Declaration.generateDeclaration()
         self._global_frame = Frame(env=self)
-        self._tree = tree
+        self.tree = tree
+        self.constants = {}
         
     def generateNextDeclaration(self):
         return self._generator.next()
