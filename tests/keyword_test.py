@@ -5,7 +5,7 @@ from keyword import kwlist
 from nose import tools as nt
 from underscore import _
 
-KEYWORDS = set(kwlist)
+KEYWORDS = set(kwlist) | {'type', 'xrange'}
 IDENTIFER_REGEX = '[a-zA-Z][a-zA-Z0-9]*'
 
 def testGenerator():
