@@ -3,6 +3,31 @@ import base
 
 from also import also
 
+class ConstantFinder(ast.NodeTransformer):
+    """Rename all constants and takes a note of it, so that
+    in the final phase we can inject an assignment node that 
+    declares them. 
+    """
+    def __init__(self, env):
+        self.env = env
+        self._assignmentManager = base.AssignmentManager()
+
+    def __nonzero__(self):
+        return bool(self._assignmentManager)
+
+    def visit_Num(self, node):
+        return self.addConstant(node, node.n)
+
+    def visit_Str(self, node):
+        return self.addConstant(node, node.s)
+
+    def addConstant(self, node, value):
+        delc = self.env.generateNextDeclaration()
+        self._assignmentManager.addAssignment(delc.name, node)
+
+    def assignNode(self):
+        return self._assignmentManager.assignNode()
+
 class Declarer(base.BaseVisitor):
 
     def visit_arguments(self, node):

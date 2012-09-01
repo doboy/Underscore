@@ -4,6 +4,30 @@ from collections import deque
 
 from also import AlsoMetaClass
 
+class AssignmentManager(object):
+    
+    def __init__(self):
+        self._assignments = {}
+        self.node = ast.Assign(targets=[ast.Tuple(elts=[])], 
+                               value=ast.Tuple(elts=[]))
+
+    def __nonzero__(self):
+        return bool(self._assignments)
+
+    def assignNode(self):
+        target_elts = []
+        value_elts = []
+        for name, node in sorted(self._assignments.items()):
+            target_elts.append(ast.Name(id=name, ctx=ast.Store()))
+            value_elts.append(node)
+        return ast.Assign(targets=[ast.Tuple(elts=target_elts)],
+                          value=ast.Tuple(elts=value_elts))
+            
+
+    def addAssignment(self, left_name, right_node):
+        self._assignments[left_name] = right_node
+    
+
 class BaseVisitor(ast.NodeVisitor):
     __metaclass__ = AlsoMetaClass
         
