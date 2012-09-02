@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name="Underscore",
-    version="0.0.30000001",
+    version="0.0.4",
     packages=["underscore"],
     author="Huan Do",
     author_email="doboy0@gmail.com",
