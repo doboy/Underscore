@@ -30,7 +30,10 @@ class __(object):
     def writeout(self, output):
         with open(self.output_file, 'w') as out:
             if self.original:
-                for line in self.code.splitlines():
-                    out.write('#  ' + line + '\n')
+                self.writeoutOriginal(out)
                 out.write('\n')
             out.write(output)
+
+    def writeoutOriginal(self, out):
+        for line in self.code.splitlines():
+            out.write('#  ' + line + '\n')
