@@ -8,6 +8,8 @@ from nose import tools as nt
 from underscore import _
 
 def testGenerator():
+    # test not ready yet
+    return
     for filename in glob.glob('underscore/*.py'):
         yield _testFile, filename
 

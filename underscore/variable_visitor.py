@@ -124,6 +124,9 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
             self.generic_rename(target)
         self.visit(node.value)
 
+    def visit_Attribute(self, node):
+        self.generic_rename(node)
+
     def visit_FunctionDef(self, node):
         if type(self._current_frame) != frame.ClassFrame:
             node.name = self.getNewName(node.name)
@@ -164,6 +167,12 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
         specific_rename = 'rename_' + type(target).__name__
         getattr(self, specific_rename)(target)
 
+    def rename_Attribute(self, node):
+        if type(node.value) == ast.Name:
+            self.generic_rename(node.value)
+        else:
+            self.generic_visit(node)
+
     def rename_Global(self, node):
         for i, name in enumerate(node.names):
             node.names[i] = self.getNewName(name)
@@ -171,7 +180,6 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
     def rename_Name(self, node):
         node.id = self.getNewName(node.id)
 
-    @also('rename_Attribute')
     def rename_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)
     

@@ -1,7 +1,5 @@
 import ast
 import codegen
-import transformers
-import environment
 
 from variable_visitor import VariableVisitor
 from constant_visitor import ConstantVisitor
@@ -36,4 +34,3 @@ class __(object):
                     out.write('#  ' + line + '\n')
                 out.write('\n')
             out.write(output)
-
