@@ -1,30 +1,25 @@
+import ast
 import glob
-import re
 
-from keyword import kwlist
-from nose import tools as nt
 from underscore import _
+from underscore import environment
+from underscore import utils
+from underscore import variable_visitor
+from nose import tools as nt
 
-KEYWORDS = set(kwlist) | {'type', 'xrange'}
-IDENTIFER_REGEX = '[a-zA-Z][a-zA-Z0-9]*'
+class KeywordVisitor( variable_visitor._VariableFinder):
+    def declare(self, name, _global=False):
+        if name != '_' * len(name):
+            nt.assert_not_in(name, self._current_frame)
+            self._current_frame.add(name, _global)
 
 def testGenerator():
     for filename in glob.glob('examples/*.py'):
         yield _testFile, filename
 
-def _ids(code):
-    return re.findall(IDENTIFER_REGEX, code)
-
 def _testFile(filename):
-    error_msg = 'Id "{id}" on line {lineno} did not get converted'
-    underscored = _(filename)
-    last_line = len(underscored.splitlines()) - 1
-    for lineno, line in enumerate(underscored.splitlines()):
-        identifers = _ids(line)
-        if lineno in (0,1, last_line) or 'import' in identifers:
-            continue
-        if 'class' in filename or 'readme' in filename or 'underscored' in filename:
-            continue
-        for identifer in identifers:
-            nt.assert_in(identifer, KEYWORDS,
-                         error_msg.format(id=identifer, lineno=lineno))
+    underscored = _(filename, write=False)
+    tree = ast.parse(underscored)
+    env = environment.Environment(tree)
+    visitor = KeywordVisitor(env, utils.AssignmentManager())
+    visitor.visit(tree)

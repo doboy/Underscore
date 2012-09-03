@@ -14,7 +14,7 @@ def testGenerator():
 def _testFile(original_file):
     underscored_file = os.path.join('examples', 'underscored', 
                                os.path.basename(original_file))
-    _(original_file, underscored_file, True)
+    _(original_file, underscored_file, original=True)
     expected_output = _execute(original_file)
     actual_output = _execute(underscored_file)
     nt.assert_equal(actual_output, expected_output)

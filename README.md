@@ -19,7 +19,7 @@ class Fibber(object):
             a, b = b, add(a, b)
         return b
 
-print Fibber().fib(10)
+print Fibber.fib(10)
 ```
 
 ###### Output
@@ -40,7 +40,7 @@ class __(________):
             (_____, ______) = (______, _(_____, ______))
         return ______
     (fib,) = (___,)
-print __().fib(_____________)
+print __.fib(_____________)
 (Fibber, add) = (__, _)
 ```
 

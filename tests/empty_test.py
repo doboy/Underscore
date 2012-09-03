@@ -9,6 +9,6 @@ def testEmpty():
         _testFile(filename)
 
 def _testFile(filename):
-    underscored = _(filename)
+    underscored = _(filename, write=False)
     nt.assert_not_equal(underscored.strip(), '', filename)
 
