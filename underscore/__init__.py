@@ -80,3 +80,5 @@ class __(object):
     def writeoutOriginal(self, out, original_code):
         for line in original_code.splitlines():
             out.write('#  ' + line + '\n')
+        out.write('\n')
+            
