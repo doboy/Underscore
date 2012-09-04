@@ -5,11 +5,11 @@
 #  
 #  y = 'c'
 #  z = x + y
-#  print x, y, z
+#  print(x, y, z)
 
 (____, _____) = ('1a-\nmulti-\nlined- string!\n', 'c')
 _ = ____
 __ = _____
 ___ = _ + __
-print _, __, ___
+print (_, __, ___)
 (x, y, z) = (_, __, ___)

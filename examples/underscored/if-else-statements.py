@@ -2,11 +2,11 @@
 #  y = 2
 #  
 #  if x > 1:
-#      print y
+#      print(y)
 #  elif x == y:
-#      print x
+#      print(x)
 #  else:
-#      print x, y
+#      print(x, y)
 #  
 
 (___, ____) = (1, 2)
@@ -17,5 +17,5 @@ if (_ > ___):
 elif (_ == __):
     print _
 else:
-    print _, __
+    print (_, __)
 (x, y) = (_, __)

@@ -9,7 +9,7 @@
 #              a, b = b, add(a, b)
 #          return b
 #  
-#  print Fibber.fib(10)
+#  print(Fibber.fib(10))
 
 (___________, ____________, _____________) = (0, 1, 10)
 (________, _________, __________) = (object, xrange, staticmethod)

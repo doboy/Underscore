@@ -9,4 +9,4 @@ class Fibber(object):
             a, b = b, add(a, b)
         return b
 
-print Fibber.fib(10)
+print(Fibber.fib(10))

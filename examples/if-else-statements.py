@@ -2,9 +2,9 @@ x = 1
 y = 2
 
 if x > 1:
-    print y
+    print(y)
 elif x == y:
-    print x
+    print(x)
 else:
-    print x, y
+    print(x, y)
 

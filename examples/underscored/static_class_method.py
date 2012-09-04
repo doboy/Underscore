@@ -2,9 +2,9 @@
 #  
 #      @staticmethod
 #      def method(n):
-#          print n
+#          print(n)
 #  
-#  print Fizz.method(3)
+#  print(Fizz.method(3))
 
 (_____,) = (3,)
 (____,) = (staticmethod,)

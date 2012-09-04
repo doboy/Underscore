@@ -2,7 +2,7 @@
 #      def run(self):
 #          return 3
 #  
-#  print Foo().run()
+#  print(Foo().run())
 #          
 
 (_____,) = (3,)

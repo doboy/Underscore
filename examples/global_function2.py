@@ -5,6 +5,6 @@ def foo():
         x = 2
     global x
     x = 3
-    print x
+    print(x)
 
 foo()
