@@ -67,10 +67,10 @@ class __(object):
         
     def underscoreTree(self, tree):
         env = environment.Environment(tree)
-        VariableVisitor(env).visit(tree)
-        ConstantVisitor(env).visit(tree)
+        VariableVisitor(env).traverse()
+        ConstantVisitor(env).traverse()
         return tree
-        
+
     def writeout(self, output, destination, original_code):
         with open(destination, 'w') as out:
             if self.original: 
@@ -81,4 +81,3 @@ class __(object):
         for line in original_code.splitlines():
             out.write('#  ' + line + '\n')
         out.write('\n')
-            

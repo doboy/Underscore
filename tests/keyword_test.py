@@ -21,5 +21,5 @@ def _testFile(filename):
     underscored = _(filename, write=False)
     tree = ast.parse(underscored)
     env = environment.Environment(tree)
-    visitor = KeywordVisitor(env, utils.AssignmentManager())
+    visitor = KeywordVisitor(env)
     visitor.visit(tree)

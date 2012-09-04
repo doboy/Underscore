@@ -10,24 +10,23 @@ from utils import AssignmentManager
 class VariableVisitor(object):
     def __init__(self, env):
         self.env = env
+        self.tree = env.tree
         self._assignmentManager = AssignmentManager()
 
-    def visit(self, tree):
-        _VariableFinder(self.env, self._assignmentManager
-                        ).visit(tree)
+    def traverse(self):
+        _VariableFinder(self.env).visit(self.tree)
         _VariableChanger(self.env, self._assignmentManager
-                         ).visit(tree)
-        self._addAssignments()
+                         ).visit(self.tree)
+        if len(self._assignmentManager.assignments):
+            self._addAssignments()
 
     def _addAssignments(self):
-        if len(self._assignmentManager.assignments):
-            node = self._assignmentManager.assignNode()
-            self.env.tree.body = [node] + self.env.tree.body
+        node = self._assignmentManager.assignNode()
+        self.tree.body = [node] + self.tree.body
 
 class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
-    def __init__(self, env, assignmentManager):
+    def __init__(self, env):
         base.BaseVisitor.__init__(self, env)
-        self._assignmentManager = assignmentManager
         self.visit_queue = deque()
     
     def visit(self, node):
@@ -110,7 +109,8 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
 
     def getNewName(self, old_name):
         assert isinstance(old_name, str), old_name
-        new_name = self._current_frame.getNewName(old_name)
+        new_name = (self._current_frame.getNewName(old_name) or
+                    self._assignmentManager.getNewName(old_name))
         if new_name is None:
             new_name = self.env.generateNextDeclaration().name
             self._assignmentManager.addAssignment(
@@ -187,4 +187,3 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
     def rename_Tuple(self, node):
         for element in node.elts:
             self.generic_rename(element)
-

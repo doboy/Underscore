@@ -1,7 +1,16 @@
 import ast
 
+VALUE_FUNC = {ast.Num:  lambda node: node.n,
+              ast.Str:  lambda node: node.s,
+              ast.Name: lambda node: node.id,
+              }
+
+def valueOf(node):
+    return VALUE_FUNC[type(node)](node)
+
 class AssignmentManager(object):
     def __init__(self):
+        self.aliases = {}
         self.assignments = {}
 
     def __nonzero__(self):
@@ -17,8 +26,12 @@ class AssignmentManager(object):
                           value=ast.Tuple(elts=value_elts))
 
     def addAssignment(self, left_name, right_node):
+        val = valueOf(right_node)
+        self.aliases[val] = left_name
         self.assignments[left_name] = right_node
 
+    def getNewName(self, old_name):
+        return self.aliases.get(old_name)
 
 class FrameContextManager(object):
 

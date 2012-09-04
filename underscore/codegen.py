@@ -142,6 +142,11 @@ class SourceGenerator(NodeVisitor):
             self.write('@')
             self.visit(decorator)
 
+    # Module
+    def visit_Module(self, node):
+        NodeVisitor.generic_visit(self, node)
+        self.write('\n')
+
     # Statements
 
     def visit_Assign(self, node):
