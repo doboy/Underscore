@@ -48,11 +48,13 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
             self.generic_declare(target)
         ast.NodeVisitor.generic_visit(self, node)
 
-    @also('visit_Module')
+    def visit_Module(self, node):
+        with self.extendFrame(node):
+            self.visit_queue.append(node)
+    
     @also('visit_FunctionDef')
     def visit_ClassDef(self, node):
-        if type(node) != ast.Module:
-            self.declare(node.name)
+        self.declare(node.name)
         with self.extendFrame(node):
             self.visit_queue.append(node)
 

@@ -6,10 +6,11 @@ class Environment(object):
         self._generator = declaration.generator()
         self.tree = tree
         self.constants = {}
+        self.frames = {}
 
     @property
     def global_frame(self):
-        return self.tree._frame
+        return self.frames[self.tree]
         
     def generateNextDeclaration(self):
         return self._generator.next()

@@ -1,7 +1,7 @@
 import ast
 
 from also import AlsoMetaClass
-from underscore import frame
+from underscore.frame import FRAMES
 from underscore.utils import FrameContextManager
 
 class BaseVisitor(object):
@@ -11,15 +11,19 @@ class BaseVisitor(object):
         self.env = env
         self._current_frame = None
 
+    @property
+    def _frames(self):
+        return self.env.frames
+
     def Frame(self, node):
-        self._current_frame = node._frame
-        return FrameContextManager(node._frame, self)
+        self._current_frame = frame = self._frames[node]
+        return FrameContextManager(frame, self)
 
     def extendFrame(self, node):
-        assert not hasattr(node, '_frame')
-        FrameConstructor = frame.FRAMES[type(node)]
-        node._frame = FrameConstructor(node, self._current_frame, self.env)
-        return FrameContextManager(node._frame, self)
+        FrameConstructor = FRAMES[type(node)]
+        frame = FrameConstructor(node, self._current_frame, self.env)
+        self._frames[node] = frame
+        return FrameContextManager(frame, self)
 
     def withdrawFrame(self):
         self._current_frame = self._current_frame.parent
