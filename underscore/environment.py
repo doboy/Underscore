@@ -13,5 +13,5 @@ class Environment(object):
         return self.frames[self.tree]
         
     def generateNextDeclaration(self):
-        return self._generator.next()
+        return next(self._generator)
 
