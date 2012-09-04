@@ -55,7 +55,8 @@ class __(object):
         elif os.path.isfile(destdir):
             raise ValueError('_: {desination} is a file, expected directory'.
                              format(desination=destdir))
-        elif not os.path.isdir(destdir):
+
+        if not os.path.isdir(destdir):
             os.mkdir(destdir)
 
         for directory, _, filenames in os.walk(dirname):

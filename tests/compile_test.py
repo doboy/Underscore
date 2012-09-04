@@ -9,6 +9,16 @@ def touch(fname, times=None):
 
 
 class BaseCompileTest(unittest.TestCase):
+    def setUp(self):
+        try:
+            shutil.rmtree('tmp/test')
+        except:
+            pass
+        os.mkdir('tmp/test')
+
+    def tearDown(self):
+            shutil.rmtree('tmp/test')
+
     def clean(self, path):
         if os.path.isdir(path):
             shutil.rmtree(path)
@@ -31,53 +41,53 @@ class SadPathCompileTest(BaseCompileTest):
     """Testing the compile function."""
 
     def testNonExistingSource(self):
-        self.clean('/tmp/bar')
+        self.clean('tmp/test/bar')
         with self.assertRaises(ValueError) as e:
-            _('/tmp/bar')
+            _('tmp/test/bar')
         self.assertEquals(str(e.exception), 
-                          '_: /tmp/bar: No such file or directory')
+                          '_: tmp/test/bar: No such file or directory')
 
     def testSourceSameAsDest(self):
-        self.touch('/tmp/car')
+        self.touch('tmp/test/car')
         with self.assertRaises(ValueError) as e:
-            _('/tmp/car', '/tmp/car')
+            _('tmp/test/car', 'tmp/test/car')
         self.assertEquals(str(e.exception), 
-                          '_: /tmp/car and /tmp/car are the same file')
+                          '_: tmp/test/car and tmp/test/car are the same file')
 
-        self.mkdir('/tmp/far')
+        self.mkdir('tmp/test/far')
         with self.assertRaises(ValueError) as e:
-            _('/tmp/far', '/tmp/far')
+            _('tmp/test/far', 'tmp/test/far')
         self.assertEquals(str(e.exception), 
-                          '_: /tmp/far and /tmp/far are the same file')
+                          '_: tmp/test/far and tmp/test/far are the same file')
 
     def testSourceDirDestFile(self):
-        self.touch('/tmp/foo.py')
-        self.mkdir('/tmp/zar')
-        assert os.path.isdir('/tmp/zar')
+        self.touch('tmp/test/foo.py')
+        self.mkdir('tmp/test/zar')
+        assert os.path.isdir('tmp/test/zar')
         with self.assertRaises(ValueError) as e:
-            _('/tmp/zar', '/tmp/foo.py')
+            _('tmp/test/zar', 'tmp/test/foo.py')
         self.assertEquals(str(e.exception), 
-                          '_: /tmp/foo.py is a file, expected directory')
+                          '_: tmp/test/foo.py is a file, expected directory')
         
 class HappyPathCompileTest(BaseCompileTest):
     def testSimpleFileCompile(self):
-        self.touch('/tmp/nar.py')
-        _('/tmp/nar.py')
-        self.assertTrue(os.path.isfile('/tmp/_nar.py'))
+        self.touch('tmp/test/nar.py')
+        _('tmp/test/nar.py')
+        self.assertTrue(os.path.isfile('tmp/test/_nar.py'))
 
     def testSimpleFileCompile2(self):
-        self.touch('/tmp/dar.py')
-        _('/tmp/dar.py', '/tmp/ddar.py')
-        self.assertTrue(os.path.isfile('/tmp/ddar.py'))
-        self.assertFalse(os.path.isfile('/tmp/_dar.py'))
+        self.touch('tmp/test/dar.py')
+        _('tmp/test/dar.py', 'tmp/test/ddar.py')
+        self.assertTrue(os.path.isfile('tmp/test/ddar.py'))
+        self.assertFalse(os.path.isfile('tmp/test/_dar.py'))
 
     def testSimpleDirCompile(self):
-        self.mkdir('/tmp/gar')
-        _('/tmp/gar')
-        self.assertTrue(os.path.isdir('/tmp/_gar'))
+        self.mkdir('tmp/test/gar')
+        _('tmp/test/gar')
+        self.assertTrue(os.path.isdir('tmp/test/_gar'))
 
     def testSimpleDirCompile2(self):
-        self.mkdir('/tmp/qar')
-        _('/tmp/qar', '/tmp/qqar.py')
-        self.assertTrue(os.path.isdir('/tmp/qqar.py'))
-        self.assertFalse(os.path.isdir('/tmp/_qar.py'))
+        self.mkdir('tmp/test/qar')
+        _('tmp/test/qar', 'tmp/test/qqar')
+        self.assertTrue(os.path.isdir('tmp/test/qqar'))
+        self.assertFalse(os.path.isdir('tmp/test/_qar'))
