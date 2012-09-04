@@ -12,7 +12,7 @@ class __(object):
 
     def __init__(self, source, destination=None, original=False, write=True):
         if source == destination:
-            raise ValueError('_: {source} and {destination} are the same file'.format(
+            raise ValueError('_: {source} and {destination} are the same'.format(
                     source=source, destination=destination))
         self.source = source
         self.destination = destination

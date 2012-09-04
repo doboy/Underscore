@@ -4,20 +4,22 @@ import unittest
 from underscore import _
 
 def touch(fname, times=None):
-    with file(fname, 'a'):
+    with open(fname, 'a'):
         os.utime(fname, times)
 
+def tmp(*filename):
+    return os.path.join('tests/tmp', *filename)
 
 class BaseCompileTest(unittest.TestCase):
     def setUp(self):
         try:
-            shutil.rmtree('tmp/test')
+            shutil.rmtree(tmp())
         except:
             pass
-        os.mkdir('tmp/test')
+        os.mkdir(tmp())
 
     def tearDown(self):
-            shutil.rmtree('tmp/test')
+            shutil.rmtree(tmp())
 
     def clean(self, path):
         if os.path.isdir(path):
@@ -41,53 +43,54 @@ class SadPathCompileTest(BaseCompileTest):
     """Testing the compile function."""
 
     def testNonExistingSource(self):
-        self.clean('tmp/test/bar')
+        self.clean(tmp('bar'))
         with self.assertRaises(ValueError) as e:
-            _('tmp/test/bar')
+            _(tmp('bar'))
         self.assertEquals(str(e.exception), 
-                          '_: tmp/test/bar: No such file or directory')
+                          '_: %s: No such file or directory' % tmp('bar'))
 
     def testSourceSameAsDest(self):
-        self.touch('tmp/test/car')
+        self.touch(tmp('car'))
         with self.assertRaises(ValueError) as e:
-            _('tmp/test/car', 'tmp/test/car')
+            _(tmp('car'), tmp('car'))
         self.assertEquals(str(e.exception), 
-                          '_: tmp/test/car and tmp/test/car are the same file')
+                          '_: %s and %s are the same' % (
+                tmp('car'), tmp('car')))
 
-        self.mkdir('tmp/test/far')
         with self.assertRaises(ValueError) as e:
-            _('tmp/test/far', 'tmp/test/far')
+            _(tmp('far'), tmp('far'))
         self.assertEquals(str(e.exception), 
-                          '_: tmp/test/far and tmp/test/far are the same file')
+                          '_: %s and %s are the same' % (
+                tmp('far'), tmp('far')))
 
     def testSourceDirDestFile(self):
-        self.touch('tmp/test/foo.py')
-        self.mkdir('tmp/test/zar')
-        assert os.path.isdir('tmp/test/zar')
+        self.touch(tmp('foo.py'))
+        self.mkdir(tmp('zar'))
+        assert os.path.isdir(tmp('zar'))
         with self.assertRaises(ValueError) as e:
-            _('tmp/test/zar', 'tmp/test/foo.py')
+            _(tmp('zar'), tmp('foo.py'))
         self.assertEquals(str(e.exception), 
-                          '_: tmp/test/foo.py is a file, expected directory')
+                          '_: %s is a file, expected directory' % tmp('foo.py'))
         
 class HappyPathCompileTest(BaseCompileTest):
     def testSimpleFileCompile(self):
-        self.touch('tmp/test/nar.py')
-        _('tmp/test/nar.py')
-        self.assertTrue(os.path.isfile('tmp/test/_nar.py'))
+        self.touch(tmp('nar.py'))
+        _(tmp('nar.py'))
+        self.assertTrue(os.path.isfile(tmp('_nar.py')))
 
     def testSimpleFileCompile2(self):
-        self.touch('tmp/test/dar.py')
-        _('tmp/test/dar.py', 'tmp/test/ddar.py')
-        self.assertTrue(os.path.isfile('tmp/test/ddar.py'))
-        self.assertFalse(os.path.isfile('tmp/test/_dar.py'))
+        self.touch(tmp('dar.py'))
+        _(tmp('dar.py'), tmp('ddar.py'))
+        self.assertTrue(os.path.isfile(tmp('ddar.py')))
+        self.assertFalse(os.path.isfile(tmp('_dar.py')))
 
     def testSimpleDirCompile(self):
-        self.mkdir('tmp/test/gar')
-        _('tmp/test/gar')
-        self.assertTrue(os.path.isdir('tmp/test/_gar'))
+        self.mkdir(tmp('gar'))
+        _(tmp('gar'))
+        self.assertTrue(os.path.isdir(tmp('_gar')))
 
     def testSimpleDirCompile2(self):
-        self.mkdir('tmp/test/qar')
-        _('tmp/test/qar', 'tmp/test/qqar')
-        self.assertTrue(os.path.isdir('tmp/test/qqar'))
-        self.assertFalse(os.path.isdir('tmp/test/_qar'))
+        self.mkdir(tmp('qar'))
+        _(tmp('qar'), tmp('qqar'))
+        self.assertTrue(os.path.isdir(tmp('qqar')))
+        self.assertFalse(os.path.isdir(tmp('_qar')))
