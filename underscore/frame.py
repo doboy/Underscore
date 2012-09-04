@@ -1,7 +1,5 @@
 import ast
-
 from collections import defaultdict
-
 
 class Frame(object):
     def __init__(self, node, parent, env):

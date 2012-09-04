@@ -1,11 +1,11 @@
 import ast
-import base
-import environment
-import frame
 
 from also import also
 from collections import deque
-from utils import AssignmentManager
+from underscore import base
+from underscore import environment
+from underscore import frame
+from underscore.utils import AssignmentManager
 
 class VariableVisitor(object):
     def __init__(self, env):
@@ -104,9 +104,6 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
         base.BaseVisitor.__init__(self, env)
         self._assignmentManager = assignmentManager
 
-    def assignNode(self):
-        return self._assignmentManager
-
     def getNewName(self, old_name):
         assert isinstance(old_name, str), old_name
         new_name = (self._current_frame.getNewName(old_name) or
@@ -126,12 +123,6 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
 
     def visit_Attribute(self, node):
         self.generic_rename(node)
-
-    def visit_FunctionDef(self, node):
-        if type(self._current_frame) != frame.ClassFrame:
-            node.name = self.getNewName(node.name)
-        with self.Frame(node):
-            self.generic_visit(node)
 
     def visit_Module(self, node):
         with self.Frame(node) as f:

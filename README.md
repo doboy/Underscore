@@ -60,27 +60,22 @@ from underscore import _
 _(filename, output_filename)
 ```
 
-## Tests
-There are three flavors of tests all driven by the `nosetests` framework, to add a test simply add a python file into the `examples` folder. When running the test command, `nosetests` each test will run for each file in the `examples` folder.
+## Development
+##### Setup
+```python setup.py develop```
 
+##### Running Tests
+```python setup.py nosetests```
+
+##### Tests
 * `tests/diff_test.py`
-  * This test makes sure that the output of the original file matches the output of the compiled file when ran.
-* `tests/empty_test.py`
-  * This test makes sure that there are not any empty files in the example folder.
+  * This test compiles python files in `example/` into `example/underscored` then runs both version to check that their outputs are equivalent.
 * `tests/keyword_test.py`
-  * This test makes sure that we are only using keywords and not using non `underscore` variables where possible
+  * This test makes sure that the compiled code does not use `non-underscored` variables where possible
 * `tests/meta_test.py` (Not ready yet)
   * This test will turn the source code into underscored code, then with the underscored code we will turn the source code into underscored code again.. and check that the `source` and `output` are the same.. I know mind blowing..
 
-## Roadmap
-This project was started on Aug 28th, 2012. And is still under development. There is lots of things to do.. here is a `TODO` list for myself
-* ~~Refactor~~
-* ~~Handle attributes~~.
-* ~~Handle with statements~~
-* ~~Handle exception statements~~
-* ~~Handle decorators~~
-* ~~Handle class methods~~
-* ~~Handle the case where input has underscored variables~~
+##### TODO
+* Support `python2.6` and `python3` currently only `python2.7` build passes
 * Give out warnings if users are using `exec` as this may lead to incorrect behavior.
-* Turn the source into obfuscate code, and make sure it executes the same behavior.
-
+* Write the `meta_test.py` described above.

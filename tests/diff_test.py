@@ -1,11 +1,15 @@
 import glob
 import os.path
 import sys
-import StringIO
 import warnings
 
 from nose import tools as nt
 from underscore import _
+
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO
 
 def testGenerator():
     for filename in glob.glob('examples/*.py'):
@@ -24,7 +28,7 @@ def _execute(filename):
     with open(filename) as python_file:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            exec python_file.read() in {}
+            exec(python_file.read(), {})
     sys.stdout = sys.__stdout__
     output = fileOut.getvalue()
     fileOut.close()

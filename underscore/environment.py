@@ -1,9 +1,9 @@
 import ast
-from declaration import generator
+from underscore import declaration
 
 class Environment(object):
     def __init__(self, tree):
-        self._generator = generator()
+        self._generator = declaration.generator()
         self.tree = tree
         self.constants = {}
 

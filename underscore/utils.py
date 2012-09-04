@@ -2,19 +2,12 @@ import ast
 
 VALUE_FUNC = {ast.Num:  lambda node: node.n,
               ast.Str:  lambda node: node.s,
-              ast.Name: lambda node: node.id,
-              }
-
-def valueOf(node):
-    return VALUE_FUNC[type(node)](node)
+              ast.Name: lambda node: node.id}
 
 class AssignmentManager(object):
     def __init__(self):
         self.aliases = {}
         self.assignments = {}
-
-    def __nonzero__(self):
-        return bool(self.assignments)
 
     def assignNode(self):
         target_elts = []
@@ -45,3 +38,7 @@ class FrameContextManager(object):
     
     def __exit__(self, *_):
         self.visitor.withdrawFrame()
+
+def valueOf(node):
+    return VALUE_FUNC[type(node)](node)
+

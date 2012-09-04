@@ -15,5 +15,6 @@ setup(
     long_description=read("README.md"),
     url="https://github.com/Doboy/Dunderscore",
     install_requires=["also"],
+    tests_require=["nose", "nose-cov"],
     scripts=["bin/_"],
     )

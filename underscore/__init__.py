@@ -1,9 +1,9 @@
 import ast
-import codegen
 import os
 
-from variable_visitor import VariableVisitor
-from constant_visitor import ConstantVisitor
+from underscore import codegen
+from underscore import variable_visitor
+from underscore import constant_visitor
 
 def _(filename, output_file=None, original=False, write=True):
     return __(filename, output_file, original, write).compile()
@@ -68,8 +68,8 @@ class __(object):
         
     def underscoreTree(self, tree):
         env = environment.Environment(tree)
-        VariableVisitor(env).traverse()
-        ConstantVisitor(env).traverse()
+        variable_visitor.VariableVisitor(env).traverse()
+        constant_visitor.ConstantVisitor(env).traverse()
         return tree
 
     def writeout(self, output, destination, original_code):

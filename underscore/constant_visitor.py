@@ -1,9 +1,10 @@
 import ast
-import base
 
-from also import also, AlsoMetaClass
-from utils import AssignmentManager
-from utils import valueOf
+from also import also
+from also import AlsoMetaClass
+from underscore import base
+from underscore.utils import AssignmentManager
+from underscore.utils import valueOf
 
 class ConstantVisitor(object):
     """Rename all constants and takes a note of it, so that
