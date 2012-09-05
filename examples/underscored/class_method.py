@@ -5,14 +5,14 @@
 #  print(Foo().run())
 #          
 
-(_5,) = (3,)
-(_4,) = (object,)
+(_____,) = (3,)
+(____,) = (object,)
 
 
-class _1(_4):
+class _(____):
 
-    def _2(_3):
-        return _5
-    (run,) = (_2,)
-print _1().run()
-(Foo,) = (_1,)
+    def __(___):
+        return _____
+    (run,) = (__,)
+print _().run()
+(Foo,) = (_,)

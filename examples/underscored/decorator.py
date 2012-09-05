@@ -8,14 +8,14 @@
 #  
 #  print(car())
 
-(_4, _5) = (6, 9)
+(____, _____) = (6, 9)
 
-def _1(_2):
-    print _4
-    return _2
+def _(__):
+    print ____
+    return __
 
-@_1
-def _3():
-    print _5
-print _3()
-(car, far) = (_3, _1)
+@_
+def ___():
+    print _____
+print ___()
+(car, far) = (___, _)

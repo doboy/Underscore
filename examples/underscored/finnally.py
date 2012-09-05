@@ -6,13 +6,13 @@
 #  finally:
 #      print 'its ok'
 
-(_2, _3, _4) = (0, 'Uh oh', 'its ok')
+(__, ___, ____) = (0, 'Uh oh', 'its ok')
 try:
     try:
-        _1 = _2
-        print _1 / _1
+        _ = __
+        print _ / _
     except:
-        print _3
+        print ___
 finally:
-    print _4
-(x,) = (_1,)
+    print ____
+(x,) = (_,)

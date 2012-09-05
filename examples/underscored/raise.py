@@ -3,9 +3,9 @@
 #  except:
 #      print 'test passed'
 
-(_2, _3) = ('this is a test', 'test passed')
-(_1,) = (AssertionError,)
+(__, ___) = ('this is a test', 'test passed')
+(_,) = (AssertionError,)
 try:
-    raise_1, _2
+    raise_, __
 except:
-    print _3
+    print ___
