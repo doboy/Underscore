@@ -48,9 +48,6 @@ class _ConstantFinder(ast.NodeVisitor):
             self._assignmentManager.addAssignment(delc.name, node)
             self.env.constants[value] = delc
 
-    def assignNode(self):
-        return self._assignmentManager.assignNode()
-
 class _ConstantChanger(ast.NodeTransformer):
     __metaclass__ = AlsoMetaClass
     def __init__(self, env):

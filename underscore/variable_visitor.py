@@ -162,9 +162,6 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
         else:
             self.scope_generators([node.key, node.value], node.generators)
 
-    def visit_comprehension(self, node):
-        self.generic_declare(node.target)
-
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_rename(target)

@@ -19,7 +19,7 @@ class BaseCompileTest(unittest.TestCase):
         os.mkdir(tmp())
 
     def tearDown(self):
-            shutil.rmtree(tmp())
+        shutil.rmtree(tmp())
 
     def clean(self, path):
         if os.path.isdir(path):
@@ -70,13 +70,14 @@ class SadPathCompileTest(BaseCompileTest):
         with self.assertRaises(ValueError) as e:
             _(tmp('car'), tmp('car'))
         self.assertEquals(str(e.exception), 
-                          '_: %s and %s are the same' % (
+                          '_: %s and %s are the same file' % (
                 tmp('car'), tmp('car')))
 
+        self.mkdir(tmp('far'))
         with self.assertRaises(ValueError) as e:
             _(tmp('far'), tmp('far'))
         self.assertEquals(str(e.exception), 
-                          '_: %s and %s are the same' % (
+                          '_: %s and %s are the same directory' % (
                 tmp('far'), tmp('far')))
 
     def testSourceDirDestFile(self):
@@ -110,3 +111,27 @@ class HappyPathCompileTest(BaseCompileTest):
         _(tmp('qar'), tmp('qqar'))
         self.assertTrue(os.path.isdir(tmp('qqar')))
         self.assertFalse(os.path.isdir(tmp('_qar')))
+
+    def testNonTrivialDirCompile(self):
+        self.mkdir(tmp('sar'))
+        self.mkdir(tmp('sar/far'))
+        self.touch(tmp('sar/car.py'))
+        self.touch(tmp('sar/far/war.py'))
+        _(tmp('sar'))
+        self.assertTrue(os.path.isdir(tmp('_sar')))
+        self.assertTrue(os.path.isdir(tmp('_sar/far')))
+        self.assertTrue(os.path.isfile(tmp('_sar/car.py')))
+        self.assertTrue(os.path.isfile(tmp('_sar/far/war.py')))
+
+    def testNonTrivialDirCompile2(self):
+        self.mkdir(tmp('jar'))
+        self.mkdir(tmp('jar/far'))
+        self.touch(tmp('jar/car.py'))
+        self.touch(tmp('jar/far/war.py'))
+        _(tmp('jar'), tmp('nar'))
+        self.assertTrue(os.path.isdir(tmp('nar')))
+        self.assertTrue(os.path.isdir(tmp('nar/far')))
+        self.assertTrue(os.path.isfile(tmp('nar/car.py')))
+        self.assertTrue(os.path.isfile(tmp('nar/far/war.py')))
+
+                   
