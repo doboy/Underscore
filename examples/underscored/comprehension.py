@@ -1,13 +1,5 @@
-#  print [ i+1 for i in xrange(10) if i > 2 ]
-#  
-#  print sorted({ j + k for j in xrange(10)
-#                 for k in xrange(10) })
-#  
-#  print sorted(({m: m + 1 for m in xrange(4)}).items())
-#  
+#  print [ i+1 for i in xrange(10) if i > 2 for j in xrange(20) ]
 
-(_______, ________, _________, __________) = (1, 10, 2, 4)
-(_____, ______) = (xrange, sorted)
-print [_ + _______ for _ in _____(________) if (_ > _________)]
-print ______({__ + ___ for __ in _____(________) for ___ in _____(________)})
-print ______({____: ____ + _______ for ____ in _____(__________)}.items())
+(____, _____, ______, _______) = (1, 10, 2, 20)
+(___,) = (xrange,)
+print [_ + ____ for _ in ___(_____) if (_ > ______) for __ in ___(_______)]

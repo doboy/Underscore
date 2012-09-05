@@ -13,7 +13,11 @@ except ImportError:
 
 def testGenerator():
     for filename in glob.glob('examples/*.py'):
-        yield _testFile, filename
+        # Python 2.6 Compat
+        if ('2.7' not in filename or 
+            ('2.7' in filename and sys.version_info >= (2,7))):
+            yield _testFile, filename
+
 
 def _testFile(original_file):
     underscored_file = os.path.join('examples', 'underscored', 
