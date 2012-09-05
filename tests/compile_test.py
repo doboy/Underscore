@@ -38,6 +38,22 @@ class BaseCompileTest(unittest.TestCase):
         self.clean(dirname)
         os.mkdir(dirname)
     
+    # Python 2.6 compat
+    class contextManager(object):
+        def __init__(self, exception_type):
+            self.exception_type = exception_type
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, _type, value, traceback):
+            self.exception = value
+            return isinstance(value, self.exception_type)
+
+    def assertRaises(self, exception):
+        return self.contextManager(exception)
+    # Python 2.6 compat
+
 
 class SadPathCompileTest(BaseCompileTest):
     """Testing the compile function."""

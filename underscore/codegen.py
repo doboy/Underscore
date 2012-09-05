@@ -567,15 +567,3 @@ class SourceGenerator(NodeVisitor):
             for if_ in node.ifs:
                 self.write(' if ')
                 self.visit(if_)
-
-    def visit_excepthandler(self, node):
-        self.newline(node)
-        self.write('except')
-        if node.type is not None:
-            self.write(' ')
-            self.visit(node.type)
-            if node.name is not None:
-                self.write(' as ')
-                self.visit(node.name)
-        self.write(':')
-        self.body(node.body)

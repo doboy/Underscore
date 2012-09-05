@@ -28,6 +28,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
     def __init__(self, env):
         base.BaseVisitor.__init__(self, env)
         self.visit_queue = deque()
+        self._global = False
     
     def visit(self, node):
         """Does a bfs, visit_queue will elements put inside of it 
@@ -40,7 +41,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
 
     def visit_arguments(self, node):
         for arg in node.args:
-            self.declare(arg.id)
+            self.generic_declare(arg)
 
     def visit_Assign(self, node):
         for target in node.targets:
@@ -53,17 +54,13 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
     
     @also('visit_FunctionDef')
     def visit_ClassDef(self, node):
-        self.declare(node.name)
+        self.generic_declare(node.name)
         with self.extendFrame(node):
             self.visit_queue.append(node)
 
     def visit_ExceptHandler(self, node):
         if isinstance(node.name, ast.Name):
-            self.declare_Name(node.name)
-
-        # compatiablity with Python 3
-        elif isinstance(node.name, str):
-            self.declare(node.name)
+            self.generic_declare(node.name)
 
     def visit_For(self, node):
         self.generic_declare(node.target)
@@ -71,14 +68,15 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
 
     def visit_Global(self, node):
         for name in node.names:
-            self.declare(name, _global=True)
+            self._global = True
+            self.generic_declare(name)
 
     @also('visit_ImportFrom')
     def visit_Import(self, node):
         for alias in node.names:
             if alias.asname is None:
                 alias.asname = alias.name
-            self.declare(alias.asname)
+            self.generic_declare(alias.asname)
 
     def visit_With(self, node):
         if node.optional_vars:
@@ -88,12 +86,12 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
         specific_declare = 'declare_' + type(target).__name__
         getattr(self, specific_declare)(target)
 
-    def declare(self, name, _global=False):
-        assert isinstance(name, str), name
-        self._current_frame.add(name, _global)
+    def declare_str(self, name):
+        self._current_frame.add(name, self._global)
+        self._global = False
 
     def declare_Name(self, node):
-        self.declare(node.id)
+        self.generic_declare(node.id)
 
     @also('declare_Attribute')
     def declare_Subscript(self, node):
