@@ -31,32 +31,112 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h1>Underscore  <a href="http://travis-ci.org/Doboy/Underscore"><img src="https://secure.travis-ci.org/Doboy/Underscore.png?branch=master" alt="Build Status"></a>
+</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Obfuscating code by changing the variable names to underscores</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>Example</h2>
+
+<h6>Input</h6>
+
+<div class="highlight"><pre><span class="c"># fib.py</span>
+
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+
+<span class="k">class</span> <span class="nc">Fibber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">b</span>
+
+<span class="k">print</span> <span class="n">Fibber</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+<h6>Output</h6>
+
+<div class="highlight"><pre><span class="c"># _fib.py</span>
+
+<span class="p">(</span><span class="n">___________</span><span class="p">,</span> <span class="n">____________</span><span class="p">,</span> <span class="n">_____________</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">________</span><span class="p">,</span> <span class="n">_________</span><span class="p">,</span> <span class="n">__________</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="nb">xrange</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span> <span class="k">as</span> <span class="n">_</span>
+
+
+<span class="k">class</span> <span class="nc">__</span><span class="p">(</span><span class="n">________</span><span class="p">):</span>
+
+    <span class="nd">@__________</span>
+    <span class="k">def</span> <span class="nf">___</span><span class="p">(</span><span class="n">____</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">_____</span><span class="p">,</span> <span class="n">______</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">___________</span><span class="p">,</span> <span class="n">____________</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_______</span> <span class="ow">in</span> <span class="n">_________</span><span class="p">(</span><span class="n">____</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">_____</span><span class="p">,</span> <span class="n">______</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">______</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="n">_____</span><span class="p">,</span> <span class="n">______</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">______</span>
+    <span class="p">(</span><span class="n">fib</span><span class="p">,)</span> <span class="o">=</span> <span class="p">(</span><span class="n">___</span><span class="p">,)</span>
+<span class="k">print</span> <span class="n">__</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="n">_____________</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Fibber</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">__</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span>
+</pre></div>
+
+<h2>Installation</h2>
+
+<pre><code>pip install underscore
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>Support for <code>python2.6</code> and <code>python2.7</code></p>
 
-<h3>Designer Templates</h3>
+<h2>Usage</h2>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<pre><code>$ _ file.py &gt; _file.py
+</code></pre>
 
-<h3>Rather Drive Stick?</h3>
+<p>You can also compile through python</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">underscore</span> <span class="kn">import</span> <span class="n">_</span>
 
-<h3>Authors and Contributors</h3>
+<span class="n">_</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
+</pre></div>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h2>Development</h2>
 
-<h3>Support or Contact</h3>
+<h5>Setup</h5>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p><code>python setup.py develop</code></p>
+
+<h5>Running Tests</h5>
+
+<p><code>python setup.py nosetests</code></p>
+
+<h5>Tests</h5>
+
+<ul>
+<li>
+<code>tests/diff_test.py</code>
+
+<ul>
+<li>This test compiles python files in <code>example/</code> into <code>example/underscored</code> then runs both version to check that their outputs are equivalent.</li>
+</ul>
+</li>
+<li>
+<code>tests/keyword_test.py</code>
+
+<ul>
+<li>This test makes sure that the compiled code does not use <code>non-underscored</code> variables where possible</li>
+</ul>
+</li>
+<li>
+<code>tests/meta_test.py</code> (Not ready yet)
+
+<ul>
+<li>This test will turn the source code into underscored code, then with the underscored code we will turn the source code into underscored code again.. and check that the <code>source</code> and <code>output</code> are the same.. I know mind blowing..</li>
+</ul>
+</li>
+</ul><h5>TODO</h5>
+
+<ul>
+<li>Give out warnings if users are using <code>exec</code> as this may lead to incorrect behavior.</li>
+<li>Write the <code>meta_test.py</code> described above.</li>
+</ul>
       </section>
     </div>
 
