@@ -7,7 +7,7 @@ from nose import tools as nt
 from underscore import _
 
 try:
-    import StringIO
+    from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
@@ -24,7 +24,7 @@ def _testFile(original_file):
     nt.assert_equal(actual_output, expected_output)
 
 def _execute(filename):
-    sys.stdout = fileOut = StringIO.StringIO()
+    sys.stdout = fileOut = StringIO()
     with open(filename) as python_file:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")

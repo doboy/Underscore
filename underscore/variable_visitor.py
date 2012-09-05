@@ -40,8 +40,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
 
     def visit_arguments(self, node):
         for arg in node.args:
-            if isinstance(arg.ctx, ast.Param):
-                self.declare(arg.id)
+            self.declare(arg.id)
 
     def visit_Assign(self, node):
         for target in node.targets:
@@ -59,8 +58,12 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
             self.visit_queue.append(node)
 
     def visit_ExceptHandler(self, node):
-        if node.name:
+        if isinstance(node.name, ast.Name):
             self.declare_Name(node.name)
+
+        # compatiablity with Python 3
+        elif isinstance(node.name, str):
+            self.declare(node.name)
 
     def visit_For(self, node):
         self.generic_declare(node.target)
