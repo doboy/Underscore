@@ -3,10 +3,10 @@
 #  except Exception as e:
 #      print(type(e))
 
-(____,) = (0,)
-(__, ___) = (Exception, type)
+(_4,) = (0,)
+(_2, _3) = (Exception, type)
 try:
-    ____ / ____
-except __ as _:
-    print ___(_)
-(e,) = (_,)
+    _4 / _4
+except _2 as _1:
+    print _3(_1)
+(e,) = (_1,)

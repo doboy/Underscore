@@ -63,6 +63,11 @@ class ClassFrame(Frame):
 class FunctionFrame(Frame):
     pass
 
-FRAMES = { ast.FunctionDef : FunctionFrame,
-           ast.ClassDef    : ClassFrame,
-           ast.Module      : ModuleFrame }
+class ComprehensionFrame(Frame):
+    pass
+
+FRAMES = { ast.FunctionDef   : FunctionFrame,
+           ast.Lambda        : FunctionFrame,
+           ast.ClassDef      : ClassFrame,
+           ast.Module        : ModuleFrame,
+           ast.comprehension : ComprehensionFrame, }

@@ -13,6 +13,6 @@ class Declaration(object):
 def generator():
     _ = '_'
     while True:
-        # yield Declaration('_' + str(len(_)))
-        yield Declaration(_)
+        yield Declaration('_' + str(len(_)))
+        # yield Declaration(_)
         _ += '_'

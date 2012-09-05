@@ -1,2 +1,2 @@
-include bin/_
+include scripts/_
 include README.md

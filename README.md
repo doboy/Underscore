@@ -49,6 +49,8 @@ print __.fib(_____________)
 pip install underscore
 ```
 
+Support for `python2.6` and `python2.7`
+
 ## Usage
 ```
 $ _ file.py > _file.py
@@ -76,6 +78,5 @@ _(filename, output_filename)
   * This test will turn the source code into underscored code, then with the underscored code we will turn the source code into underscored code again.. and check that the `source` and `output` are the same.. I know mind blowing..
 
 ##### TODO
-* Support `python2.6` and `python3` currently only `python2.7` build passes
 * Give out warnings if users are using `exec` as this may lead to incorrect behavior.
 * Write the `meta_test.py` described above.

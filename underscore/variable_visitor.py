@@ -42,12 +42,17 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
     def visit_arguments(self, node):
         for arg in node.args:
             self.generic_declare(arg)
+        if node.vararg:
+            self.generic_declare(node.vararg)
+        if node.kwarg:
+            self.generic_declare(node.kwarg)
 
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_declare(target)
         ast.NodeVisitor.generic_visit(self, node)
 
+    @also('visit_Lambda')
     def visit_Module(self, node):
         with self.extendFrame(node):
             self.visit_queue.append(node)
@@ -81,6 +86,23 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
     def visit_With(self, node):
         if node.optional_vars:
             self.generic_declare(node.optional_vars)
+
+    def scope_generators(self, generators):
+        if generators:
+            first = generators[0]
+            rest = generators[1:]
+            with self.extendFrame(first):
+                self.visit_comprehension(first)
+                self.scope_generators(rest)
+                
+    @also('visit_DictComp')
+    @also('visit_ListComp')
+    @also('visit_SetComp')
+    def visit_Comprehensions(self, node):
+        self.scope_generators(node.generators)
+
+    def visit_comprehension(self, node):
+        self.generic_declare(node.target)
 
     def generic_declare(self, target):
         specific_declare = 'declare_' + type(target).__name__
@@ -119,6 +141,30 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
         else:
             return new_name
     
+    def scope_generators(self, exprs, generators):
+        if generators:
+            first = generators[0]
+            rest = generators[1:]
+            with self.Frame(first):
+                self.generic_visit(first)
+                self.scope_generators(exprs, rest)
+        else:
+            for expr in exprs:
+                self.visit(expr)
+
+    @also('visit_DictComp')
+    @also('visit_ListComp')
+    @also('visit_SetComp')
+    def visit_Comprehensions(self, node):
+        # Dict doesnt have elts
+        if hasattr(node, 'elt'):
+            self.scope_generators([node.elt], node.generators)
+        else:
+            self.scope_generators([node.key, node.value], node.generators)
+
+    def visit_comprehension(self, node):
+        self.generic_declare(node.target)
+
     def visit_Assign(self, node):
         for target in node.targets:
             self.generic_rename(target)
@@ -142,10 +188,17 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
             if declAssignNode:
                 node.body.append(declAssignNode)
 
+    def visit_Lambda(self, node):
+        with self.Frame(node) as f:
+            self.generic_visit(node)
+
     def visit_FunctionDef(self, node):
         node.name = self.getNewName(node.name)
         with self.Frame(node) as f:
             self.generic_visit(node)
+
+    def visit_arguments(self, node):
+        self.generic_rename(node)
 
     @also('visit_ImportFrom')
     def visit_Import(self, node):
@@ -160,6 +213,14 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
     def generic_rename(self, target):
         specific_rename = 'rename_' + type(target).__name__
         getattr(self, specific_rename)(target)
+
+    def rename_arguments(self, node):
+        for arg in node.args:
+            self.generic_rename(arg)
+        if node.vararg:
+            node.vararg = self.getNewName(node.vararg)
+        if node.kwarg:
+            node.kwarg = self.getNewName(node.kwarg)
 
     def rename_Attribute(self, node):
         if type(node.value) == ast.Name:

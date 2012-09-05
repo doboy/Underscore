@@ -3,7 +3,7 @@
 #  
 #  Bar()
 
-class _:
+class _1:
     pass
-_()
-(Bar,) = (_,)
+_1()
+(Bar,) = (_1,)

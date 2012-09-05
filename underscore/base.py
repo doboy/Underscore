@@ -20,6 +20,7 @@ class BaseVisitor(object):
         return FrameContextManager(frame, self)
 
     def extendFrame(self, node):
+        assert node not in self._frames
         FrameConstructor = FRAMES[type(node)]
         frame = FrameConstructor(node, self._current_frame, self.env)
         self._frames[node] = frame
@@ -27,3 +28,5 @@ class BaseVisitor(object):
 
     def withdrawFrame(self):
         self._current_frame = self._current_frame.parent
+
+

@@ -6,15 +6,15 @@
 #  
 #  print(Fizz.method(3))
 
-(_____,) = (3,)
-(____,) = (staticmethod,)
+(_5,) = (3,)
+(_4,) = (staticmethod,)
 
 
-class _:
+class _1:
 
-    @____
-    def __(___):
-        print ___
-    (method,) = (__,)
-print _.method(_____)
-(Fizz,) = (_,)
+    @_4
+    def _2(_3):
+        print _3
+    (method,) = (_2,)
+print _1.method(_5)
+(Fizz,) = (_1,)

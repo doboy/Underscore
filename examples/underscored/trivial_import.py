@@ -2,6 +2,6 @@
 #  
 #  ast
 
-import ast as _
-_
-(ast,) = (_,)
+import ast as _1
+_1
+(ast,) = (_1,)
