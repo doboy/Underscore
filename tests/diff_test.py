@@ -12,6 +12,8 @@ except ImportError:
     from io import StringIO
 
 def testGenerator():
+    if not os.path.isdir('examples/underscored'):
+        os.mkdir('examples/underscored')
     for filename in glob.glob('examples/*.py'):
         # Python 2.6 Compat
         if ('2.7' not in filename or 
