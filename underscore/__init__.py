@@ -36,7 +36,8 @@ class __(object):
         if destination is None:
             destination = os.path.join(head, '_' + tail)
         elif os.path.isdir(destination):
-            os.path.join(head, tail, '_' + tail)
+            destination = os.path.join(head, os.path.basename(destination),
+                                       os.path.basename(filename))
             
         original_code = open(filename).read()
         tree = ast.parse(original_code)

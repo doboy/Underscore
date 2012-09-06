@@ -21,21 +21,10 @@ class BaseCompileTest(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(tmp())
 
-    def clean(self, path):
-        if os.path.isdir(path):
-            shutil.rmtree(path)
-        elif os.path.isfile(path):
-            os.remove(path)
-        else:
-            # no file exists
-            pass
-
     def touch(self, filename):
-        self.clean(filename)
         touch(filename)
 
     def mkdir(self, dirname):
-        self.clean(dirname)
         os.mkdir(dirname)
     
     # Python 2.6 compat
@@ -59,7 +48,6 @@ class SadPathCompileTest(BaseCompileTest):
     """Testing the compile function."""
 
     def testNonExistingSource(self):
-        self.clean(tmp('bar'))
         with self.assertRaises(ValueError) as e:
             _(tmp('bar'))
         self.assertEquals(str(e.exception), 
@@ -100,6 +88,12 @@ class HappyPathCompileTest(BaseCompileTest):
         _(tmp('dar.py'), tmp('ddar.py'))
         self.assertTrue(os.path.isfile(tmp('ddar.py')))
         self.assertFalse(os.path.isfile(tmp('_dar.py')))
+
+    def testFileToDirectoryCompile(self):
+        self.touch(tmp('kar.py'))
+        self.mkdir(tmp('lar'))
+        _(tmp('kar.py'), tmp('lar'))
+        self.assertTrue(os.path.isfile(tmp('lar/kar.py')))
 
     def testSimpleDirCompile(self):
         self.mkdir(tmp('gar'))

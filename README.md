@@ -70,10 +70,10 @@ _(filename, output_filename)
 ```python setup.py nosetests```
 
 ##### Tests
+* `tests/compile_test.py`
+  * This test makes sure that all argument combinations for the comandline tool works properly
 * `tests/diff_test.py`
   * This test compiles python files in `example/` into `example/underscored` then runs both version to check that their outputs are equivalent.
-* `tests/keyword_test.py`
-  * This test makes sure that the compiled code does not use `non-underscored` variables where possible
 * `tests/meta_test.py` (Not ready yet)
   * This test will turn the source code into underscored code, then with the underscored code we will turn the source code into underscored code again.. and check that the `source` and `output` are the same.. I know mind blowing..
 

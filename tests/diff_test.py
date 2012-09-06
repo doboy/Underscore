@@ -5,21 +5,13 @@ import warnings
 
 from nose import tools as nt
 from underscore import _
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from StringIO import StringIO
 
 def testGenerator():
-    if not os.path.isdir('examples/underscored'):
-        os.mkdir('examples/underscored')
-    for filename in glob.glob('examples/*.py'):
-        # Python 2.6 Compat
-        if ('2.7' not in filename or 
-            ('2.7' in filename and sys.version_info >= (2,7))):
-            yield _testFile, filename
-
+    ver = sys.version_info
+    version_tests = glob.glob('examples/*.py' + str(ver.major) + '.' + str(ver.minor))
+    for filename in glob.glob('examples/*.py') + version_tests:
+        yield _testFile, filename
 
 def _testFile(original_file):
     underscored_file = os.path.join('examples', 'underscored', 
