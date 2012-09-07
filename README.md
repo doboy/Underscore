@@ -53,7 +53,13 @@ Support for `python2.6` and `python2.7`
 
 ## Usage
 ```
-$ _ file.py > _file.py
+Usage: _ [options] src [dest]
+
+Options:
+  -h, --help      show this help message and exit
+  -o, --original  write out the original file as a comment to the compiled
+                  code
+  -v, --verbose
 ```
 You can also compile through python
 ```python

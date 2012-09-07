@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+import sys
+from optparse import OptionParser
+from underscore import _
+
+usage = "usage: %prog [options] src [dest]"
+
+parser = OptionParser(usage=usage)
+parser.set_defaults(verbose=False, original=False)
+parser.add_option("-o", "--original", dest="original", action="store_true",
+                  help="write out the original file as a comment to the compiled code")
+parser.add_option("-v", "--verbose", dest="verbose", action="store_true")
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        parser.print_help()
+    else:
+        options, args = parser.parse_args()
+        options = {'verbose'  : options.verbose,
+                   'original' : options.original }
+        _(*args, **dict(options))

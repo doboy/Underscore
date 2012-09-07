@@ -1,86 +1,95 @@
 import ast
+import glob
 import os
 
 from underscore import codegen
 from underscore import variable_visitor
 from underscore import constant_visitor
 
-def _(filename, output_file=None, original=False, write=True):
-    return __(filename, output_file, original, write).compile()
+def _(src, dest=None, original=False, verbose=False):
+    return __(src, dest, original, verbose).compile()
 
 class __(object):
 
-    def __init__(self, source, destination=None, original=False, write=True):
-        self.source = source
-        self.destination = destination
-        self.original = original
-        self.write = write
+    def __init__(self, src, dest=None, original=False, verbose=True):
+        self.src = src
+        self.dest = dest
+        __.original = original
+        __.verbose = verbose
 
     def compile(self):
-        self._genericCompile(self.source, self.destination)
+        self._genericCompile(self.src, self.dest)
 
-    def _genericCompile(self, source, destination):
-        if os.path.isfile(source):
-            return self._compileFile(source, destination)
-        elif os.path.isdir(source):
-            return self._compileDir(source, destination)
+    @staticmethod
+    def _genericCompile(src, dest):
+        if src == dest:
+            raise ValueError('_: {src} and {dest} are the same location'.
+                             format(src=src, dest=dest))
+        while src.endswith('/'):
+            src = src[:-1]
+        head, tail = os.path.split(src)
+        if dest is None:
+            dest = os.path.join(head, '_' + tail)
+        
+        if os.path.isdir(src):
+            return __._compileDir(src, dest)
+        elif os.path.isfile(src):
+            return __._compileFile(src, dest)
         else:
-            raise ValueError('_: {source}: No such file or directory'.
-                             format(source=self.source))
+            raise ValueError('_: {src}: No such file or directory'.
+                             format(src=src))
 
-    def _compileFile(self, filename, destination):
-        if filename == destination:
-            raise ValueError('_: {source} and {destination} are the same file'.
-                             format(source=filename, destination=destination))
-        head, tail = os.path.split(filename)
-        if destination is None:
-            destination = os.path.join(head, '_' + tail)
-        elif os.path.isdir(destination):
-            destination = os.path.join(head, os.path.basename(destination),
-                                       os.path.basename(filename))
+    @staticmethod
+    def _compileFile(filename, dest):
+        if os.path.isdir(dest):
+            dest = os.path.join(dest, os.path.basename(filename))
             
+
+        if __.verbose:
+            print 'compiling {src} -> {dest}'.format(
+                src=filename, dest=dest)
+
         original_code = open(filename).read()
-        tree = ast.parse(original_code)
+        output = __._compileCode(original_code)
+        __._writeout(output, dest, original_code)
 
-        self._underscoreTree(tree)
-        output = codegen.to_source(tree)
-
-        if self.write:
-            self._writeout(output, destination, original_code)
-
-        return output
-
-    def _compileDir(self, dirname, destdir):
-        if dirname == destdir:
-            raise ValueError('_: {source} and {destination} are the same directory'.
-                             format(source=dirname, destination=destdir))
-        head, tail = os.path.split(dirname)
-        if destdir is None:
-            destdir = os.path.join(head, '_' + tail)
-        elif os.path.isfile(destdir):
+    @staticmethod
+    def _compileDir(dirname, destdir):
+        if os.path.isfile(destdir):
             raise ValueError('_: {desination} is a file, expected directory'.
                              format(desination=destdir))
 
         if not os.path.isdir(destdir):
             os.mkdir(destdir)
 
-        for blob in os.listdir(dirname):
-            self._genericCompile(os.path.join(dirname, blob),
-                                 os.path.join(destdir, blob))
+        for item in os.listdir(dirname):
+            src = os.path.join(dirname, item)
+            if os.path.isdir(src) or src.endswith('.py'):
+                dest = os.path.join(destdir, item)
+                __._genericCompile(src, dest)
+
+    @staticmethod
+    def _compileCode(code):
+        tree = ast.parse(code)
+        __._underscoreTree(tree)
+        return codegen.to_source(tree)
         
-    def _underscoreTree(self, tree):
+    @staticmethod
+    def _underscoreTree(tree):
         env = environment.Environment(tree)
         variable_visitor.VariableVisitor(env).traverse()
         constant_visitor.ConstantVisitor(env).traverse()
         return tree
 
-    def _writeout(self, output, destination, original_code):
-        with open(destination, 'w') as out:
-            if self.original: 
-                self._writeoutOriginal(out, original_code)
+    @staticmethod
+    def _writeout(output, dest, original_code):
+        with open(dest, 'w') as out:
+            if __.original: 
+                __._writeoutOriginal(out, original_code)
             out.write(output)
 
-    def _writeoutOriginal(self, out, original_code):
+    @staticmethod
+    def _writeoutOriginal(out, original_code):
         for line in original_code.splitlines():
             out.write('#  ' + line + '\n')
         out.write('\n')
