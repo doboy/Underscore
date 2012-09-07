@@ -10,9 +10,10 @@ from StringIO import StringIO
 def testGenerator():
     ver = sys.version_info
     if ver >= (2, 7):
-        version_tests = glob.glob('examples/*.py' + str(ver.major) + '.' + str(ver.minor))
+        major, minor = 2, 7
     else:
-        version_tests = str(ver[0]) + '.' + str(ver[1])
+        major, minor, micro = ver
+    version_tests = glob.glob('examples/*.py' + str(ver.major) + '.' + str(ver.minor))
     for filename in glob.glob('examples/*.py') + version_tests:
         yield _testFile, filename
 
