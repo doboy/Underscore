@@ -8,12 +8,8 @@ from underscore import _
 from StringIO import StringIO
 
 def testGenerator():
-    ver = sys.version_info
-    if ver >= (2, 7):
-        major, minor = 2, 7
-    else:
-        major, minor, micro = ver
-    version_tests = glob.glob('examples/*.py' + str(ver.major) + '.' + str(ver.minor))
+    major, minor = sys.version_info[:2]
+    version_tests = glob.glob('examples/*.py' + str(major) + '.' + str(minor))
     for filename in glob.glob('examples/*.py') + version_tests:
         yield _testFile, filename
 
