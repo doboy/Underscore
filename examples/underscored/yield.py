@@ -13,4 +13,4 @@ def _():
         yield __
 for ___ in _():
     print ___
-(bar, z) = (_, ___)
+(bar,) = (_,)

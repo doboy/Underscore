@@ -15,4 +15,3 @@ try:
         print ___
 finally:
     print ____
-(x,) = (_,)

@@ -86,3 +86,4 @@ _(filename, output_filename)
 ##### TODO
 * Give out warnings if users are using `exec` as this may lead to incorrect behavior.
 * Write the `meta_test.py` described above.
+* Module doc-string to work

@@ -149,6 +149,14 @@ class SourceGenerator(NodeVisitor):
 
     # Statements
 
+    def visit_Assert(self, node):
+        self.newline(node)
+        self.write('assert ')
+        self.visit(node.test)
+        if node.msg:
+            self.write(', ')
+            self.visit(node.msg)
+        
     def visit_Assign(self, node):
         self.newline(node)
         for idx, target in enumerate(node.targets):

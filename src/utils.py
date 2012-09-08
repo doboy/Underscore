@@ -9,7 +9,7 @@ class AssignmentManager(object):
         self.aliases = {}
         self.assignments = {}
 
-    def assignNode(self):
+    def assign_node(self):
         target_elts = []
         value_elts = []
         for name, node in sorted(self.assignments.items()):
@@ -18,12 +18,12 @@ class AssignmentManager(object):
         return ast.Assign(targets=[ast.Tuple(elts=target_elts)],
                           value=ast.Tuple(elts=value_elts))
 
-    def addAssignment(self, left_name, right_node):
+    def add_assignment(self, left_name, right_node):
         val = valueOf(right_node)
         self.aliases[val] = left_name
         self.assignments[left_name] = right_node
 
-    def getNewName(self, old_name):
+    def get_new_name(self, old_name):
         return self.aliases.get(old_name)
 
 class FrameContextManager(object):
@@ -37,7 +37,7 @@ class FrameContextManager(object):
         return self.frame
     
     def __exit__(self, *_):
-        self.visitor.withdrawFrame()
+        self.visitor.withdraw_frame()
 
 def valueOf(node):
     return VALUE_FUNC[type(node)](node)

@@ -4,12 +4,15 @@ import sys
 from optparse import OptionParser
 from underscore import _
 
-usage = "usage: %prog [options] src [dest]"
+usage = ("usage: %prog [options] source [target]\n"
+         "the source is compiled into the file/directory of the target.\n"
+         "If target is left out, the target will be the source prepended\n"
+         "with an underscore.")
 
 parser = OptionParser(usage=usage)
 parser.set_defaults(verbose=False, original=False)
 parser.add_option("-o", "--original", dest="original", action="store_true",
-                  help="write out the original file as a comment to the compiled code")
+                  help="include the source code as a comment in the compiled code."""
 parser.add_option("-v", "--verbose", dest="verbose", action="store_true")
 
 if __name__ == '__main__':

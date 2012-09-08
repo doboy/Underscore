@@ -21,10 +21,10 @@ class ConstantVisitor(object):
                         ).visit(self.tree)
         _ConstantChanger(self.env).visit(self.tree)
         if len(self._assignmentManager.assignments):
-            self._addAssignments()
+            self._add_assignments()
 
-    def _addAssignments(self):
-        node = self._assignmentManager.assignNode()
+    def _add_assignments(self):
+        node = self._assignmentManager.assign_node()
         self.tree.body = [node] + self.tree.body
 
 class _ConstantFinder(ast.NodeVisitor):
@@ -33,19 +33,24 @@ class _ConstantFinder(ast.NodeVisitor):
         self.env = env
         self._assignmentManager = assignmentManager
 
-    def visit(self, node):
-        ast.NodeVisitor.visit(self, node)
-
     @also('visit_Num')
     @also('visit_Str')
     def visit_Constant(self, node):
-        value = valueOf(node)
-        return self.addConstant(node, value)
+        if not hasattr(node, 'isdoc'):
+            value = valueOf(node)
+            return self.addConstant(node, value)
+
+    @also('visit_ClassDef')
+    def visit_FunctionDef(self, node):
+        if (isinstance(node.body[0], ast.Expr) and 
+            isinstance(node.body[0].value, ast.Str)):
+            node.body[0].value.isdoc = True
+        self.generic_visit(node)
 
     def addConstant(self, node, value):
-        if value not in self.env.constants:
-            delc = self.env.generateNextDeclaration()
-            self._assignmentManager.addAssignment(delc.name, node)
+        if value not in self.env.constants and not hasattr(node, 'isdoc'):
+            delc = self.env.generate_new_delc()
+            self._assignmentManager.add_assignment(delc.name, node)
             self.env.constants[value] = delc
 
 class _ConstantChanger(ast.NodeTransformer):
@@ -56,5 +61,8 @@ class _ConstantChanger(ast.NodeTransformer):
     @also('visit_Num')
     @also('visit_Str')
     def visit_Constant(self, node):
-        value = valueOf(node)
-        return ast.Name(id=self.env.constants[value].name)
+        if not hasattr(node, 'isdoc'):
+            value = valueOf(node)
+            return ast.Name(id=self.env.constants[value].name)
+        else:
+            return node

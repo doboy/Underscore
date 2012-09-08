@@ -6,49 +6,49 @@ class Frame(object):
         self.parent = parent
         self.env = env
         self._node = node
-        self.declarations = defaultdict(self.env.generateNextDeclaration)
+        self.declarations = {}
 
-    def __contains__(self, name):
-        return name in self.declarations
+    def add(self, name, global_=False, conditional=False):
+        if name not in self.declarations:
+            self.declarations[name] = self.env.generate_new_delc()
+        decl = self.declarations[name]
+        decl.global_ |= global_
+        if decl._conditional is None:
+            decl._conditional = conditional
+        else:
+            decl._conditional &= conditional
 
-    def __getitem__(self, name):
-        return self.declarations[name]
-
-    def add(self, name, global_=False):
-        """Add a declaration into declarations, this can be down just 
-        by accessing the element. If the element is not in the dict
-        generateId will be called. If it is in it generateId wont be called.
-        """
-        self.declarations[name].global_ |= global_
-
-    def getNewName(self, name):
-        """Returns an unique id, variables scoped differently will have 
-        different ids even if they have the same name. Returns None if
-        we cannot find the declaration of the name, meaning either built-in, 
-        (from blah import *)ed or misstyped.
-        """
-        try:
-            frame = self._LookUpEnv(name)
-            declaration = frame[name]
+    def get_new_name(self, name):
+        delc = self.get_delc(name)
+        return delc.name if delc else None            
+        
+    def get_delc(self, name):
+        frame = self._lookup(name)
+        if frame:
+            declaration = frame.declarations[name]
             if declaration.global_:
-                declaration = frame.env.global_frame[name]
-            return declaration.name
-        except TypeError as e:
-            pass
-
-    def _LookUpEnv(current_env, name):
+                declaration = frame.env.global_frame.declarations[name]
+            return declaration
+        
+    def _lookup(current_frame, name):
         """Returns the environment that contains the defintion of name."""
-        while current_env is not None:
-            if name in current_env:
-                return current_env
+        while current_frame is not None:
+            if name in current_frame.declarations:
+                return current_frame
             else:
-                current_env = current_env.parent
+                current_frame = current_frame.parent
 
-    def declarationsAssignNode(self):
-        if len(self.declarations):
+    @property
+    def unconditional_delcs(self):
+        return [(name, delc) for (name, delc) in self.declarations.items()
+                if not delc.conditional]
+
+    @property
+    def delc_assignment_node(self):
+        if len(self.unconditional_delcs):
             target_elts = []
             value_elts = []
-            for name, delc in sorted(self.declarations.items()):
+            for name, delc in sorted(self.unconditional_delcs):
                 target_elts.append(ast.Name(id=name, ctx=ast.Load()))
                 value_elts.append(ast.Name(id=delc.name, ctx=ast.Store()))
             return ast.Assign(targets=[ast.Tuple(elts=target_elts)],
