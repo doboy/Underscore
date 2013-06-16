@@ -429,7 +429,7 @@ class SourceGenerator(NodeVisitor):
             self.visit(item)
         self.write(idx and ')' or ',)')
 
-    def sequence_visit(left, right):
+    def _sequence_visit(left, right): # pylint: disable=E0213
         def visit(self, node):
             self.write(left)
             for idx, item in enumerate(node.elts):
@@ -439,9 +439,8 @@ class SourceGenerator(NodeVisitor):
             self.write(right)
         return visit
 
-    visit_List = sequence_visit('[', ']')
-    visit_Set = sequence_visit('{', '}')
-    del sequence_visit
+    visit_List = _sequence_visit('[', ']')
+    visit_Set = _sequence_visit('{', '}')
 
     def visit_Dict(self, node):
         self.write('{')
@@ -519,7 +518,7 @@ class SourceGenerator(NodeVisitor):
     def visit_Ellipsis(self, node):
         self.write('Ellipsis')
 
-    def generator_visit(left, right):
+    def _generator_visit(left, right): # pylint: disable=E0213
         def visit(self, node):
             self.write(left)
             self.visit(node.elt)
@@ -528,10 +527,9 @@ class SourceGenerator(NodeVisitor):
             self.write(right)
         return visit
 
-    visit_ListComp = generator_visit('[', ']')
-    visit_GeneratorExp = generator_visit('(', ')')
-    visit_SetComp = generator_visit('{', '}')
-    del generator_visit
+    visit_ListComp = _generator_visit('[', ']')
+    visit_GeneratorExp = _generator_visit('(', ')')
+    visit_SetComp = _generator_visit('{', '}')
 
     def visit_DictComp(self, node):
         self.write('{')
