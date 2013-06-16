@@ -28,7 +28,7 @@ class ConstantFinder(ast.NodeVisitor):
 
     def addConstant(self, node, value):
         if value not in self.env.constants and not hasattr(node, 'isdoc'):
-            delc = self.env.generate_new_delc()
-            self._assignmentManager.add_assignment(delc.name, node)
-            self.env.constants[value] = delc
+            decl = self.env.generate_new_decl()
+            self._assignmentManager.add_assignment(decl.name, node)
+            self.env.constants[value] = decl
 

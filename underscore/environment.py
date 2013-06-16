@@ -17,7 +17,7 @@ class Environment(object):
     def global_frame(self):
         return self.frames[self.tree]
 
-    def generate_new_delc(self):
+    def generate_new_decl(self):
         return next(self._generator)
 
     @property

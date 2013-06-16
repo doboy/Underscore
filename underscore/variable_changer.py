@@ -9,7 +9,7 @@ class VariableChanger(ast.NodeVisitor):
         self.env = env
         self._assignmentManager = assignmentManager
 
-    def get_new_name(self, old_name, imported=False):
+    def get_new_name(self, old_name, is_imported=False):
         assert isinstance(old_name, str), str(old_name)
 
         new_name = (self.env.current_frame.get_new_name(old_name) or
@@ -19,8 +19,8 @@ class VariableChanger(ast.NodeVisitor):
             return old_name
 
         if new_name is None:
-            new_name = self.env.generate_new_delc().name
-            if not imported:
+            new_name = self.env.generate_new_decl().name
+            if not is_imported:
                 self._assignmentManager.add_assignment(
                     new_name, ast.Name(id=old_name, ctx=ast.Store()))
         return new_name
@@ -55,15 +55,15 @@ class VariableChanger(ast.NodeVisitor):
     def visit_Module(self, node):
         with self.env.Frame(node) as f:
             self.generic_visit(node)
-            if f.delc_assignment_node:
-                node.body.append(f.delc_assignment_node)
+            if f.decl_assignment_node:
+                node.body.append(f.decl_assignment_node)
 
     def visit_ClassDef(self, node):
         node.name = self.get_new_name(node.name)
         with self.env.Frame(node) as f:
             self.generic_visit(node)
-            if f.delc_assignment_node:
-                node.body.append(f.delc_assignment_node)
+            if f.decl_assignment_node:
+                node.body.append(f.decl_assignment_node)
 
     def visit_Lambda(self, node):
         with self.env.Frame(node) as f:
@@ -81,7 +81,7 @@ class VariableChanger(ast.NodeVisitor):
     def visit_Import(self, node):
         for alias in node.names:
             if alias.name != '*':
-                alias.asname = self.get_new_name(alias.asname, imported=True)
+                alias.asname = self.get_new_name(alias.asname, is_imported=True)
 
     @also('visit_Name')
     def visit_Global(self, node):

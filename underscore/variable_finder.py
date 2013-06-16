@@ -99,9 +99,9 @@ class VariableFinder(ast.NodeVisitor):
                 self.notify_delete(target)
 
     def notify_delete(self, node):
-        delc = self.env.current_frame.declarations.get(node.id)
-        if delc:
-            delc.delete = True
+        decl = self.env.current_frame.declarations.get(node.id)
+        if decl:
+            decl.delete = True
 
     @also('visit_DictComp')
     @also('visit_ListComp')

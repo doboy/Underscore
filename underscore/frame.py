@@ -10,7 +10,7 @@ class Frame(object):
 
     def add(self, name, global_=False, conditional=False):
         if name not in self.declarations:
-            self.declarations[name] = self.env.generate_new_delc()
+            self.declarations[name] = self.env.generate_new_decl()
         decl = self.declarations[name]
         decl.global_ |= global_
         if decl._conditional is None:
@@ -19,10 +19,10 @@ class Frame(object):
             decl._conditional &= conditional
 
     def get_new_name(self, name):
-        delc = self.get_delc(name)
-        return delc.name if delc else None
+        decl = self.get_decl(name)
+        return decl.name if decl else None
 
-    def get_delc(self, name):
+    def get_decl(self, name):
         frame = self._lookup(name)
         if frame:
             declaration = frame.declarations[name]
@@ -40,18 +40,18 @@ class Frame(object):
                 current_frame = current_frame.parent
 
     @property
-    def unconditional_delcs(self):
-        return [(name, delc) for (name, delc) in self.declarations.items()
-                if not delc.conditional]
+    def unconditional_decls(self):
+        return [(name, decl) for (name, decl) in self.declarations.items()
+                if not decl.conditional]
 
     @property
-    def delc_assignment_node(self):
-        if len(self.unconditional_delcs):
+    def decl_assignment_node(self):
+        if len(self.unconditional_decls):
             target_elts = []
             value_elts = []
-            for name, delc in sorted(self.unconditional_delcs):
+            for name, decl in sorted(self.unconditional_decls):
                 target_elts.append(ast.Name(id=name, ctx=ast.Load()))
-                value_elts.append(ast.Name(id=delc.name, ctx=ast.Store()))
+                value_elts.append(ast.Name(id=decl.name, ctx=ast.Store()))
             return ast.Assign(targets=[ast.Tuple(elts=target_elts)],
                               value=ast.Tuple(elts=value_elts))
 
