@@ -49,6 +49,7 @@ class VariableFinder(ast.NodeVisitor):
     def visit_ExceptHandler(self, node):
         if isinstance(node.name, ast.Name):
             self.generic_declare(node.name)
+        ast.NodeVisitor.generic_visit(self, node)
 
     def visit_For(self, node):
         self._conditional_stack.append(node)
@@ -74,9 +75,9 @@ class VariableFinder(ast.NodeVisitor):
     @also('visit_While')
     @also('visit_TryExcept')
     def visit_If(self, node):
-         self._conditional_stack.append(node)
-         self.generic_visit(node)
-         assert node == self._conditional_stack.pop()
+        self._conditional_stack.append(node)
+        self.generic_visit(node)
+        assert node == self._conditional_stack.pop()
 
     def visit_With(self, node):
         if node.optional_vars:
