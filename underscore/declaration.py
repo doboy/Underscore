@@ -1,7 +1,6 @@
 class Declaration(object):
     def __init__(self, name):
         self.name = name
-        self.global_ = False
         self.delete = False
         self._conditional = None
 

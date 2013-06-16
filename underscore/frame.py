@@ -1,5 +1,4 @@
 import ast
-from collections import defaultdict
 
 class Frame(object):
     def __init__(self, node, parent, env):
@@ -7,12 +6,21 @@ class Frame(object):
         self.env = env
         self._node = node
         self.declarations = {}
+        self.global_declarations = set()
 
-    def add(self, name, global_=False, conditional=False):
-        if name not in self.declarations:
-            self.declarations[name] = self.env.generate_new_decl()
-        decl = self.declarations[name]
-        decl.global_ |= global_
+    def add(self, name, is_global=False, conditional=False):
+        if is_global or name in self.global_declarations:
+            self.global_declarations.add(name)
+            frame_containing_decl = self.env.global_frame
+        else:
+            frame_containing_decl = self
+
+        if name not in frame_containing_decl.declarations:
+            frame_containing_decl.declarations[name] = \
+                self.env.generate_new_decl()
+
+        decl = frame_containing_decl.declarations[name]
+
         if decl._conditional is None:
             decl._conditional = conditional
         else:
@@ -26,8 +34,6 @@ class Frame(object):
         frame = self._lookup(name)
         if frame:
             declaration = frame.declarations[name]
-            if declaration.global_:
-                declaration = frame.env.global_frame.declarations[name]
             return declaration
 
     def _lookup(self, name):

@@ -9,8 +9,8 @@ class VariableFinder(ast.NodeVisitor):
     def __init__(self, env):
         self.env = env
         self.visit_queue = deque()
-        self._global = False
         self._conditional_stack = []
+        self._global = False
 
     def visit(self, node):
         """Does a bfs, visit_queue will elements put inside of it
@@ -61,6 +61,7 @@ class VariableFinder(ast.NodeVisitor):
         for name in node.names:
             self._global = True
             self.generic_declare(name)
+            self._global = False
 
     @also('visit_ImportFrom')
     def visit_Import(self, node):
@@ -117,8 +118,10 @@ class VariableFinder(ast.NodeVisitor):
         getattr(self, specific_declare)(target)
 
     def declare_str(self, name):
-        self.env.current_frame.add(name, self._global, bool(self._conditional_stack))
-        self._global = False
+        self.env.current_frame.add(
+            name,
+            self._global,
+            bool(self._conditional_stack))
 
     def declare_Name(self, node):
         self.generic_declare(node.id)
