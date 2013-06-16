@@ -5,6 +5,7 @@ import os
 import codegen
 import environment
 import constant_visitor
+import future_visitor
 import variable_visitor
 
 def _(src, dest=None, original=False, verbose=False):
@@ -80,6 +81,7 @@ class __(object):
         env = environment.Environment(tree)
         variable_visitor.VariableVisitor(env).traverse()
         constant_visitor.ConstantVisitor(env).traverse()
+        future_visitor.FutureVisitor(env).traverse()
         return tree
 
     @staticmethod

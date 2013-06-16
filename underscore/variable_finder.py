@@ -63,7 +63,16 @@ class VariableFinder(ast.NodeVisitor):
             self.generic_declare(name)
             self._global = False
 
-    @also('visit_ImportFrom')
+    def visit_ImportFrom(self, node):
+        if node.module != '__future__':
+            for alias in node.names:
+                if alias.name == '*':
+                    self.env.starred = True
+                    continue
+                if alias.asname is None:
+                    alias.asname = alias.name
+                self.generic_declare(alias.asname)
+
     def visit_Import(self, node):
         for alias in node.names:
             if alias.name == '*':

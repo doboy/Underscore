@@ -77,7 +77,12 @@ class VariableChanger(ast.NodeVisitor):
     def visit_arguments(self, node):
         self.generic_rename(node)
 
-    @also('visit_ImportFrom')
+    def visit_ImportFrom(self, node):
+        if node.module != '__future__':
+            for alias in node.names:
+                if alias.name != '*':
+                    alias.asname = self.get_new_name(alias.asname, is_imported=True)
+
     def visit_Import(self, node):
         for alias in node.names:
             if alias.name != '*':

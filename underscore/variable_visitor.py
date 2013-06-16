@@ -1,13 +1,11 @@
 import ast
 
 import environment
-from utils import AssignmentManager
 from variable_finder import VariableFinder
 from variable_changer import VariableChanger
+from utils import AssignmentManager
 
 class VariableVisitor(object):
-    """
-    """
     def __init__(self, env):
         self.env = env
         self.tree = env.tree
