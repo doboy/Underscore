@@ -82,9 +82,6 @@ class VariableFinder(ast.NodeVisitor):
                     False,
                     bool(self._conditional_stack))
                 continue
-            if alias.name == '*':
-                self.env.starred = True
-                continue
             if alias.asname is None:
                 alias.asname = alias.name
             self.generic_declare(alias.asname)
