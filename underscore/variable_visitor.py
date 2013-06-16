@@ -16,7 +16,6 @@ class VariableVisitor(object):
 
     def traverse(self):
         _VariableFinder(self.env).visit(self.tree)
-        _VariableCondFinder(self.env).visit(self.tree)
         _VariableChanger(self.env, self._assignmentManager
                          ).visit(self.tree)
         if len(self._assignmentManager.assignments):
@@ -94,7 +93,6 @@ class _VariableFinder(ast.NodeVisitor):
                 alias.asname = alias.name
             self.generic_declare(alias.asname)
 
-
     @also('visit_While')
     @also('visit_TryExcept')
     def visit_If(self, node):
@@ -105,6 +103,7 @@ class _VariableFinder(ast.NodeVisitor):
     def visit_With(self, node):
         if node.optional_vars:
             self.generic_declare(node.optional_vars)
+
         self.generic_visit(node)
 
     def scope_generators(self, generators):
@@ -114,6 +113,16 @@ class _VariableFinder(ast.NodeVisitor):
             with self.env.extend_frame(first):
                 self.visit_comprehension(first)
                 self.scope_generators(rest)
+
+    def visit_Delete(self, node):
+        for target in node.targets:
+            if isinstance(target, ast.Name):
+                self.notify_delete(target)
+
+    def notify_delete(self, node):
+        delc = self.env.current_frame.declarations.get(node.id)
+        if delc:
+            delc.delete = True
 
     @also('visit_DictComp')
     @also('visit_ListComp')
@@ -143,29 +152,6 @@ class _VariableFinder(ast.NodeVisitor):
     def declare_Tuple(self, node):
         for element in node.elts:
             self.generic_declare(element)
-
-class _VariableCondFinder(ast.NodeVisitor):
-    __metaclass__ = AlsoMetaClass
-
-    def __init__(self, env):
-        self.env = env
-
-    @also('visit_Module')
-    @also('visit_ClassDef')
-    @also('visit_FunctionDef')
-    def new_scope(self, node):
-        with self.env.Frame(node):
-            self.generic_visit(node)
-
-    def visit_Delete(self, node):
-        for target in node.targets:
-            if isinstance(target, ast.Name):
-                self.notify_delete(target)
-
-    def notify_delete(self, node):
-        delc = self.env.current_frame.declarations.get(node.id)
-        if delc:
-            delc.delete = True
 
 class _VariableChanger(ast.NodeVisitor):
     __metaclass__ = AlsoMetaClass
