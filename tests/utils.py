@@ -7,7 +7,7 @@ def execute(filename):
     sys.stdout = fileOut = StringIO()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        execfile(filename, {})
+        execfile(filename, {'__file__': filename})
     sys.stdout = sys.__stdout__
     output = fileOut.getvalue()
     fileOut.close()
