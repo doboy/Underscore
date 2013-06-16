@@ -1,3 +1,5 @@
+# Copyright (c) 2013 Huan Do, http://huan.do
+
 import ast
 import glob
 import os

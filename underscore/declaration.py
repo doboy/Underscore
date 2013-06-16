@@ -1,3 +1,5 @@
+# Copyright (c) 2013 Huan Do, http://huan.do
+
 class Declaration(object):
     def __init__(self, name):
         self.name = name

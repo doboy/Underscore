@@ -1,3 +1,5 @@
+# Copyright (c) 2013 Huan Do, http://huan.do
+
 class FrameContextManager(object):
 
     def __init__(self, frame, visitor):

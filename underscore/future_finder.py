@@ -1,5 +1,6 @@
+# Copyright (c) 2013 Huan Do, http://huan.do
+
 import ast
-from collections import deque
 
 from also import also, AlsoMetaClass
 

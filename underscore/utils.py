@@ -1,3 +1,5 @@
+# Copyright (c) 2013 Huan Do, http://huan.do
+
 import ast
 
 VALUE_FUNC = {ast.Num:  lambda node: node.n,
