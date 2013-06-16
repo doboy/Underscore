@@ -214,8 +214,7 @@ class SourceGenerator(NodeVisitor):
         for base in node.bases:
             paren_or_comma()
             self.visit(base)
-        # XXX: the if here is used to keep this module compatible
-        #      with python 2.6.
+        # XXX: python >= 3.0 only
         if hasattr(node, 'keywords'):
             for keyword in node.keywords:
                 paren_or_comma()
@@ -344,6 +343,7 @@ class SourceGenerator(NodeVisitor):
         self.newline(node)
         self.write('global ' + ', '.join(node.names))
 
+    # XXX: Python >= 3.0
     def visit_Nonlocal(self, node):
         self.newline(node)
         self.write('nonlocal ' + ', '.join(node.names))
@@ -364,15 +364,16 @@ class SourceGenerator(NodeVisitor):
         self.write('continue')
 
     def visit_Raise(self, node):
-        # XXX: Python 2.6 / 3.0 compatibility
         self.newline(node)
         self.write('raise')
+        # XXX: Python <= 2.6 only
         if hasattr(node, 'exc') and node.exc is not None:
             self.write(' ')
             self.visit(node.exc)
             if node.cause is not None:
                 self.write(' from ')
                 self.visit(node.cause)
+        # XXX: Python <= 2.7
         elif hasattr(node, 'type') and node.type is not None:
             self.visit(node.type)
             if node.inst is not None:
@@ -554,6 +555,7 @@ class SourceGenerator(NodeVisitor):
         self.write(' else ')
         self.visit(node.orelse)
 
+    # XXX: Python >= 3.0 only
     def visit_Starred(self, node):
         self.write('*')
         self.visit(node.value)
