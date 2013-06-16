@@ -2,7 +2,6 @@ import ast
 
 from also import also, AlsoMetaClass
 from collections import deque
-import base_visitor
 import environment
 import frame
 from utils import AssignmentManager
