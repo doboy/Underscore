@@ -1,4 +1,6 @@
-PYTHONPATH=src
+install:
+	python setup.py install
 
 test:
-	PYTHONPATH=$(PYTHONPATH) nosetests
+	python setup.py nosetests
+
