@@ -2,20 +2,19 @@ import ast
 
 from also import also
 from also import AlsoMetaClass
-from underscore import base
-from underscore.utils import AssignmentManager
-from underscore.utils import valueOf
+from utils import AssignmentManager
+from utils import valueOf
 
 class ConstantVisitor(object):
     """Rename all constants and takes a note of it, so that
-    in the final phase we can inject an assignment node that 
-    declares them. 
+    in the final phase we can inject an assignment node that
+    declares them.
     """
     def __init__(self, env):
         self.env = env
         self.tree = env.tree
         self._assignmentManager = AssignmentManager()
-        
+
     def traverse(self):
         _ConstantFinder(self.env, self._assignmentManager
                         ).visit(self.tree)
@@ -42,7 +41,7 @@ class _ConstantFinder(ast.NodeVisitor):
 
     @also('visit_ClassDef')
     def visit_FunctionDef(self, node):
-        if (isinstance(node.body[0], ast.Expr) and 
+        if (isinstance(node.body[0], ast.Expr) and
             isinstance(node.body[0].value, ast.Str)):
             node.body[0].value.isdoc = True
         self.generic_visit(node)

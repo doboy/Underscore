@@ -20,8 +20,8 @@ class Frame(object):
 
     def get_new_name(self, name):
         delc = self.get_delc(name)
-        return delc.name if delc else None            
-        
+        return delc.name if delc else None
+
     def get_delc(self, name):
         frame = self._lookup(name)
         if frame:
@@ -29,9 +29,10 @@ class Frame(object):
             if declaration.global_:
                 declaration = frame.env.global_frame.declarations[name]
             return declaration
-        
-    def _lookup(current_frame, name):
+
+    def _lookup(self, name):
         """Returns the environment that contains the defintion of name."""
+        current_frame = self
         while current_frame is not None:
             if name in current_frame.declarations:
                 return current_frame

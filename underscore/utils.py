@@ -33,9 +33,9 @@ class FrameContextManager(object):
         self.visitor = visitor
 
     def __enter__(self):
-        self.visitor._current_frame = self.frame
+        self.visitor.current_frame = self.frame
         return self.frame
-    
+
     def __exit__(self, *_):
         self.visitor.withdraw_frame()
 

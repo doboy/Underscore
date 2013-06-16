@@ -13,7 +13,7 @@ BOOLOP_SYMBOLS = {
     And:        'and',
     Or:         'or'
 }
- 
+
 BINOP_SYMBOLS = {
     Add:        '+',
     Sub:        '-',
@@ -27,7 +27,7 @@ BINOP_SYMBOLS = {
     BitAnd:     '&',
     BitXor:     '^'
 }
- 
+
 CMPOP_SYMBOLS = {
     Eq:         '==',
     Gt:         '>',
@@ -40,7 +40,7 @@ CMPOP_SYMBOLS = {
     NotEq:      '!=',
     NotIn:      'not in'
 }
- 
+
 UNARYOP_SYMBOLS = {
     Invert:     '~',
     Not:        'not',
@@ -156,7 +156,7 @@ class SourceGenerator(NodeVisitor):
         if node.msg:
             self.write(', ')
             self.visit(node.msg)
-        
+
     def visit_Assign(self, node):
         self.newline(node)
         for idx, target in enumerate(node.targets):

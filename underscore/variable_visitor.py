@@ -1,13 +1,15 @@
 import ast
 
-from also import also
+from also import also, AlsoMetaClass
 from collections import deque
-from underscore import base
-from underscore import environment
-from underscore import frame
-from underscore.utils import AssignmentManager
+import base_visitor
+import environment
+import frame
+from utils import AssignmentManager
 
 class VariableVisitor(object):
+    """
+    """
     def __init__(self, env):
         self.env = env
         self.tree = env.tree
@@ -25,20 +27,22 @@ class VariableVisitor(object):
         node = self._assignmentManager.assign_node()
         self.tree.body = [node] + self.tree.body
 
-class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
+class _VariableFinder(ast.NodeVisitor):
+    __metaclass__ = AlsoMetaClass
+
     def __init__(self, env):
-        base.BaseVisitor.__init__(self, env)
+        self.env = env
         self.visit_queue = deque()
         self._global = False
         self._conditional_stack = []
-    
+
     def visit(self, node):
-        """Does a bfs, visit_queue will elements put inside of it 
+        """Does a bfs, visit_queue will elements put inside of it
         as it visits."""
         ast.NodeVisitor.visit(self, node)
         while self.visit_queue:
             node = self.visit_queue.popleft()
-            with self.Frame(node):
+            with self.env.Frame(node):
                 ast.NodeVisitor.generic_visit(self, node)
 
     def visit_arguments(self, node):
@@ -56,14 +60,14 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
 
     @also('visit_Lambda')
     def visit_Module(self, node):
-        with self.extend_frame(node):
+        with self.env.extend_frame(node):
             self.visit_queue.append(node)
-    
+
     @also('visit_ClassDef')
     @also('visit_FunctionDef')
     def new_scope(self, node):
         self.generic_declare(node.name)
-        with self.extend_frame(node):
+        with self.env.extend_frame(node):
             self.visit_queue.append(node)
 
     def visit_ExceptHandler(self, node):
@@ -98,7 +102,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
          self._conditional_stack.append(node)
          self.generic_visit(node)
          assert node == self._conditional_stack.pop()
-        
+
     def visit_With(self, node):
         if node.optional_vars:
             self.generic_declare(node.optional_vars)
@@ -108,10 +112,10 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
         if generators:
             first = generators[0]
             rest = generators[1:]
-            with self.extend_frame(first):
+            with self.env.extend_frame(first):
                 self.visit_comprehension(first)
                 self.scope_generators(rest)
-                
+
     @also('visit_DictComp')
     @also('visit_ListComp')
     @also('visit_SetComp')
@@ -126,7 +130,7 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
         getattr(self, specific_declare)(target)
 
     def declare_str(self, name):
-        self._current_frame.add(name, self._global, bool(self._conditional_stack))
+        self.env.current_frame.add(name, self._global, bool(self._conditional_stack))
         self._global = False
 
     def declare_Name(self, node):
@@ -141,13 +145,17 @@ class _VariableFinder(ast.NodeVisitor, base.BaseVisitor):
         for element in node.elts:
             self.generic_declare(element)
 
-class _VariableCondFinder(ast.NodeVisitor, base.BaseVisitor):
+class _VariableCondFinder(ast.NodeVisitor):
+    __metaclass__ = AlsoMetaClass
+
+    def __init__(self, env):
+        self.env = env
 
     @also('visit_Module')
     @also('visit_ClassDef')
     @also('visit_FunctionDef')
     def new_scope(self, node):
-        with self.Frame(node):
+        with self.env.Frame(node):
             self.generic_visit(node)
 
     def visit_Delete(self, node):
@@ -156,19 +164,21 @@ class _VariableCondFinder(ast.NodeVisitor, base.BaseVisitor):
                 self.notify_delete(target)
 
     def notify_delete(self, node):
-        delc = self._current_frame.declarations.get(node.id)
+        delc = self.env.current_frame.declarations.get(node.id)
         if delc:
             delc.delete = True
 
-class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
+class _VariableChanger(ast.NodeVisitor):
+    __metaclass__ = AlsoMetaClass
+
     def __init__(self, env, assignmentManager):
-        base.BaseVisitor.__init__(self, env)
+        self.env = env
         self._assignmentManager = assignmentManager
 
     def get_new_name(self, old_name, imported=False):
         assert isinstance(old_name, str), str(old_name)
 
-        new_name = (self._current_frame.get_new_name(old_name) or
+        new_name = (self.env.current_frame.get_new_name(old_name) or
                     self._assignmentManager.get_new_name(old_name))
 
         if new_name is None and self.env.starred:
@@ -180,11 +190,11 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
                 self._assignmentManager.add_assignment(
                     new_name, ast.Name(id=old_name, ctx=ast.Store()))
         return new_name
-    
+
     def scope_generators(self, exprs, generators):
         if generators:
             first, rest = generators[0], generators[1:]
-            with self.Frame(first):
+            with self.env.Frame(first):
                 self.generic_visit(first)
                 self.scope_generators(exprs, rest)
         else:
@@ -209,25 +219,25 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
         self.generic_rename(node)
 
     def visit_Module(self, node):
-        with self.Frame(node) as f:
+        with self.env.Frame(node) as f:
             self.generic_visit(node)
             if f.delc_assignment_node:
                 node.body.append(f.delc_assignment_node)
 
     def visit_ClassDef(self, node):
         node.name = self.get_new_name(node.name)
-        with self.Frame(node) as f:
+        with self.env.Frame(node) as f:
             self.generic_visit(node)
             if f.delc_assignment_node:
                 node.body.append(f.delc_assignment_node)
 
     def visit_Lambda(self, node):
-        with self.Frame(node) as f:
+        with self.env.Frame(node) as f:
             self.generic_visit(node)
 
     def visit_FunctionDef(self, node):
         node.name = self.get_new_name(node.name)
-        with self.Frame(node) as f:
+        with self.env.Frame(node) as f:
             self.generic_visit(node)
 
     def visit_arguments(self, node):
@@ -270,7 +280,7 @@ class _VariableChanger(ast.NodeVisitor, base.BaseVisitor):
 
     def rename_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)
-    
+
     @also('rename_List')
     def rename_Tuple(self, node):
         for element in node.elts:
