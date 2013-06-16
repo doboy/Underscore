@@ -3,6 +3,7 @@ import ast
 import environment
 from variable_finder import VariableFinder
 from variable_changer import VariableChanger
+from variable_transformer import VariableTransformer
 from utils import AssignmentManager
 
 class VariableVisitor(object):
@@ -15,6 +16,8 @@ class VariableVisitor(object):
         VariableFinder(self.env).visit(self.tree)
         VariableChanger(self.env, self._assignmentManager
                          ).visit(self.tree)
+
+        VariableTransformer(self.env).visit(self.tree)
         if len(self._assignmentManager.assignments):
             self._add_assignments()
 

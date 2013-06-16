@@ -85,6 +85,8 @@ class VariableChanger(ast.NodeVisitor):
 
     def visit_Import(self, node):
         for alias in node.names:
+            if '.' in alias.name:
+                continue
             if alias.name != '*':
                 alias.asname = self.get_new_name(alias.asname, is_imported=True)
 
@@ -124,3 +126,5 @@ class VariableChanger(ast.NodeVisitor):
     def rename_Tuple(self, node):
         for element in node.elts:
             self.generic_rename(element)
+
+x = 1

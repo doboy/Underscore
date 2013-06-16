@@ -75,6 +75,13 @@ class VariableFinder(ast.NodeVisitor):
 
     def visit_Import(self, node):
         for alias in node.names:
+            if '.' in alias.name:
+                name = alias.name[:alias.name.index('.')]
+                self.env.current_frame.add(
+                    name,
+                    False,
+                    bool(self._conditional_stack))
+                continue
             if alias.name == '*':
                 self.env.starred = True
                 continue
