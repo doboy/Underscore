@@ -6,3 +6,7 @@ VALUE_FUNC = {ast.Num:  lambda node: node.n,
 
 def value_of(node):
     return VALUE_FUNC[type(node)](node)
+
+def prepend_node(node, nodes):
+    return [node] + nodes
+

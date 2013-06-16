@@ -2,18 +2,20 @@ import ast
 
 from also import also, AlsoMetaClass
 
+from assignment_manager import AssignmentManager
+
 class VariableChanger(ast.NodeVisitor):
     __metaclass__ = AlsoMetaClass
 
-    def __init__(self, env, assignmentManager):
+    def __init__(self, env):
         self.env = env
-        self._assignmentManager = assignmentManager
+        self.assignment_manager = AssignmentManager()
 
     def get_new_name(self, old_name, is_imported=False):
         assert isinstance(old_name, str), str(old_name)
 
         new_name = (self.env.current_frame.get_new_name(old_name) or
-                    self._assignmentManager.get_new_name(old_name))
+                    self.assignment_manager.get_new_name(old_name))
 
         if new_name is None and self.env.starred:
             return old_name
@@ -21,7 +23,7 @@ class VariableChanger(ast.NodeVisitor):
         if new_name is None:
             new_name = self.env.generate_new_decl().name
             if not is_imported:
-                self._assignmentManager.add_assignment(
+                self.assignment_manager.add_assignment(
                     new_name, ast.Name(id=old_name, ctx=ast.Store()))
         return new_name
 

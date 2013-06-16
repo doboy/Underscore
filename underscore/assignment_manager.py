@@ -8,7 +8,7 @@ class AssignmentManager(object):
         self.aliases = {}
         self.assignments = {}
 
-    def assign_node(self):
+    def get_assign_node(self):
         target_elts = []
         value_elts = []
         for name, node in sorted(self.assignments.items()):

@@ -1,6 +1,5 @@
 import ast
 
-from assignment_manager import AssignmentManager
 from constant_finder import ConstantFinder
 from constant_changer import ConstantChanger
 
@@ -12,15 +11,12 @@ class ConstantVisitor(object):
     def __init__(self, env):
         self.env = env
         self.tree = env.tree
-        self._assignmentManager = AssignmentManager()
 
     def traverse(self):
-        ConstantFinder(self.env, self._assignmentManager
-                        ).visit(self.tree)
+        constant_finder = ConstantFinder(self.env)
+        constant_finder.visit(self.tree)
         ConstantChanger(self.env).visit(self.tree)
-        if len(self._assignmentManager.assignments):
-            self._add_assignments()
 
-    def _add_assignments(self):
-        node = self._assignmentManager.assign_node()
-        self.tree.body = [node] + self.tree.body
+        if len(constant_finder.assignment_manager.assignments):
+            assign_node = constant_finder.assignment_manager.get_assign_node()
+            self.tree.body = [assign_node] + self.tree.body
