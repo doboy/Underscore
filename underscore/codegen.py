@@ -314,6 +314,10 @@ class SourceGenerator(NodeVisitor):
         self.body(node.body)
         for handler in node.handlers:
             self.visit(handler)
+        if node.orelse:
+            self.newline(node)
+            self.write('else:')
+            self.body(node.orelse)
 
     def visit_ExceptHandler(self, node):
         self.newline(node)
