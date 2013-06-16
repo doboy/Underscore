@@ -1,0 +1,4 @@
+PYTHONPATH=src
+
+test:
+	PYTHONPATH=$(PYTHONPATH) nosetests

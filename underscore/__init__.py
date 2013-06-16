@@ -2,10 +2,10 @@ import ast
 import glob
 import os
 
-from underscore import codegen
-from underscore import environment
-from underscore import constant_visitor
-from underscore import variable_visitor
+import codegen
+import environment
+import constant_visitor
+import variable_visitor
 
 def _(src, dest=None, original=False, verbose=False):
     return __(src, dest, original, verbose).compile()
@@ -31,7 +31,7 @@ class __(object):
         head, tail = os.path.split(src)
         if dest is None:
             dest = os.path.join(head, '_' + tail)
-        
+
         if os.path.isdir(src):
             return __._compile_dir(src, dest)
         elif os.path.isfile(src):
@@ -44,7 +44,7 @@ class __(object):
     def _compile_file(filename, dest):
         if os.path.isdir(dest):
             dest = os.path.join(dest, os.path.basename(filename))
-            
+
 
         if __.verbose:
             print 'compiling {src} -> {dest}'.format(
@@ -74,7 +74,7 @@ class __(object):
         tree = ast.parse(code)
         __._underscore_tree(tree)
         return codegen.to_source(tree)
-        
+
     @staticmethod
     def _underscore_tree(tree):
         env = environment.Environment(tree)
@@ -85,7 +85,7 @@ class __(object):
     @staticmethod
     def _writeout(output, dest, original_code):
         with open(dest, 'w') as out:
-            if __.original: 
+            if __.original:
                 __._writeout_original(out, original_code)
             out.write(output)
 

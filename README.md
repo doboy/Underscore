@@ -11,7 +11,7 @@ Obfuscating code by changing the variable names to underscores
 from operator import add
 
 class Fibber(object):
-    
+
     @staticmethod
     def fib(n):
         a, b = 0, 1
@@ -73,7 +73,7 @@ _(filename, output_filename)
 ```python setup.py develop```
 
 ##### Running Tests
-```python setup.py nosetests```
+```make test```
 
 ##### Tests
 * `tests/compile_test.py`
