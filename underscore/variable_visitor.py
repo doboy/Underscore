@@ -4,7 +4,7 @@ import environment
 from variable_finder import VariableFinder
 from variable_changer import VariableChanger
 from variable_transformer import VariableTransformer
-from utils import AssignmentManager
+from assignment_manager import AssignmentManager
 
 class VariableVisitor(object):
     def __init__(self, env):

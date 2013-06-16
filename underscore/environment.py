@@ -1,7 +1,7 @@
 import ast
 
 from frame import FRAMES
-from utils import FrameContextManager
+from frame_context_manager import FrameContextManager
 import declaration
 
 class Environment(object):

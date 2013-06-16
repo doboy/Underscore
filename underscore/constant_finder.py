@@ -3,7 +3,7 @@ import ast
 from also import also
 from also import AlsoMetaClass
 
-from utils import valueOf
+from utils import value_of
 
 class ConstantFinder(ast.NodeVisitor):
     __metaclass__ = AlsoMetaClass
@@ -16,7 +16,7 @@ class ConstantFinder(ast.NodeVisitor):
     @also('visit_Str')
     def visit_Constant(self, node):
         if not hasattr(node, 'isdoc'):
-            value = valueOf(node)
+            value = value_of(node)
             return self.addConstant(node, value)
 
     @also('visit_ClassDef')

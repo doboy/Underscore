@@ -1,6 +1,6 @@
 import ast
 
-from utils import AssignmentManager
+from assignment_manager import AssignmentManager
 from constant_finder import ConstantFinder
 from constant_changer import ConstantChanger
 
