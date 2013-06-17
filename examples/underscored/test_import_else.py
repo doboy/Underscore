@@ -5,7 +5,7 @@
 #  else:
 #      x = 3
 #  
-#  print x
+#  print(x)
 
 (__,) = (3,)
 try:

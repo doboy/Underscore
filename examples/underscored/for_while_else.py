@@ -3,16 +3,16 @@
 #      i -= 1
 #      if i % 2:
 #          continue
-#      print i
+#      print(i)
 #  else:
-#      print 3
+#      print(3)
 #  
 #  for i in xrange(10):
-#      print i
+#      print(i)
 #      if i == 4:
 #          break
 #  else:
-#      print 5
+#      print(5)
 
 (___, ____, _____, ______, _______, ________, _________) = (10, 0, 1, 2, 3, 4, 5)
 (__,) = (xrange,)

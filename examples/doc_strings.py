@@ -1,5 +1,5 @@
 def foo():
     "this is a doc string"
 
-print foo()
-print foo.__doc__
+print(foo())
+print(foo.__doc__)

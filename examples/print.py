@@ -1,3 +1,3 @@
 import sys
 
-print >>sys.stdout, 'uh oh hot dog',
+print('uh oh hot dog')

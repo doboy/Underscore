@@ -1,5 +1,5 @@
 #  import logging.handlers; y = 3
-#  print dir(logging.handlers)
+#  print(dir(logging.handlers))
 
 (____,) = (3,)
 (___,) = (dir,)

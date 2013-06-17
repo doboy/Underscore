@@ -1,17 +1,17 @@
 def d1(func):
-    print 'hi'
+    print('hi')
     return func
 
 def d2(word):
-    print word
+    print(word
     def decor(func):
-        print 'hello'
+        print('hello')
         return func
     return decor
 
 @d1
 @d2('test')
 def d3():
-    print 'yo'
+    print('yo')
 
 d3()

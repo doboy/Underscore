@@ -3,7 +3,7 @@
 #          yield i
 #  
 #  for z in bar():
-#      print z
+#      print(z)
 
 (_____,) = (10,)
 (____,) = (xrange,)

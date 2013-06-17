@@ -3,4 +3,4 @@ def bar():
         yield i
 
 for z in bar():
-    print z
+    print(z)

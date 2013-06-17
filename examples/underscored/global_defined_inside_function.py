@@ -3,7 +3,7 @@
 #      x = 3
 #  
 #  foo()
-#  print x
+#  print(x)
 
 (___,) = (3,)
 

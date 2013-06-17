@@ -3,4 +3,4 @@ def foo():
     x = 3
 
 foo()
-print x
+print(x)
