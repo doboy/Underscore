@@ -2,18 +2,27 @@
 
 import ast
 
-from frame import FRAMES
+from frame import FRAMES, ModuleFrame
 from frame_context_manager import FrameContextManager
 import declaration
 
 class Environment(object):
     def __init__(self, tree):
-        self._generator = declaration.generator()
+        module_frame = ModuleFrame(
+            node=tree,
+            parent=None,
+            env=self)
+
+        self.frames = {
+            tree: module_frame
+        }
+
+        self.current_frame = module_frame
+
+        self.tree= tree
         self.constants = {}
-        self.frames = {}
         self.starred = False
-        self.tree = tree
-        self.current_frame = None
+        self._generator = declaration.generator()
 
     @property
     def global_frame(self):

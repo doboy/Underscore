@@ -36,8 +36,7 @@ class VariableFinder(ast.NodeVisitor):
             self.generic_declare(target)
         ast.NodeVisitor.generic_visit(self, node)
 
-    @also('visit_Lambda')
-    def visit_Module(self, node):
+    def visit_Lambda(self, node):
         with self.env.extend_frame(node):
             self.visit_queue.append(node)
 
