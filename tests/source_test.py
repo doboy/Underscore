@@ -3,12 +3,12 @@ import os
 
 from nose import tools as nt
 from underscore import _
-from utils import execute
+from test_utils import execute
 
 def testGenerator():
     try: os.mkdir('tests/tmp')
     except: pass
-        
+
     for filename in glob.glob('src/*.py'):
         yield _testFile, filename
 

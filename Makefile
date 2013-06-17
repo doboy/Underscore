@@ -1,9 +1,16 @@
-install:
-	python setup.py install
+PY ?= python
+SRC_PATH ?= underscore/
+TEST_PATH ?= tests/
+PYTHONPATH:=$(TEST_PATH):$(SRC_PATH):$(PYTHONPATH)
 
-test:
-	python setup.py nosetests
+install: clean
+	env PYTHONPATH=$(PYTHONPATH) $(PY) setup.py install
 
-coverage:
-	python setup.py nosetests --with-coverage --cover-package=underscore --cover-html
+test: clean
+	env PYTHONPATH=$(PYTHONPATH) $(PY) setup.py nosetests
 
+coverage: clean
+	env PYTHONPATH=$(PYTHONPATH) $(PY) setup.py nosetests --with-coverage --cover-package=underscore --cover-html
+
+clean:
+	find . -name "*pyc" | xargs rm

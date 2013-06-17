@@ -1,7 +1,11 @@
 import sys
 import warnings
 
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except:
+    # Python 3 support
+    from io import StringIO
 
 def execute(filename):
     sys.stdout = fileOut = StringIO()

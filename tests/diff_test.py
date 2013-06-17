@@ -4,7 +4,7 @@ import sys
 
 from nose import tools as nt
 from underscore import _
-from utils import execute
+from test_utils import execute
 
 def testGenerator():
     major, minor = sys.version_info[:2]
@@ -13,7 +13,7 @@ def testGenerator():
         yield _testFile, filename
 
 def _testFile(original_file):
-    underscored_file = os.path.join('examples', 'underscored', 
+    underscored_file = os.path.join('examples', 'underscored',
                                os.path.basename(original_file))
     _(original_file, underscored_file, original=True)
     nt.assert_equal(execute(original_file),

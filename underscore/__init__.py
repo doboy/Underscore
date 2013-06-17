@@ -50,8 +50,8 @@ class __(object):
 
 
         if __.verbose:
-            print 'compiling {src} -> {dest}'.format(
-                src=filename, dest=dest)
+            print('compiling {src} -> {dest}'.format(
+                src=filename, dest=dest))
 
         original_code = open(filename).read()
         output = __._compile_code(original_code)

@@ -3,7 +3,7 @@ def d1(func):
     return func
 
 def d2(word):
-    print(word
+    print(word)
     def decor(func):
         print('hello')
         return func

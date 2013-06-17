@@ -70,7 +70,7 @@ def to_source(node, indent_with=' ' * 4, add_line_information=False):
     """
     generator = SourceGenerator(indent_with, add_line_information)
     generator.visit(node)
-    # print generator.result # <<<<
+
     return ''.join(generator.result)
 
 
