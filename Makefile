@@ -13,4 +13,4 @@ coverage: clean
 	env PYTHONPATH=$(PYTHONPATH) $(PY) setup.py nosetests --with-coverage --cover-package=underscore --cover-html
 
 clean:
-	find . -name "*pyc" | xargs rm
+	find . -name "*pyc" -delete
