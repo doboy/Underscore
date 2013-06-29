@@ -67,7 +67,7 @@ def testGenerator():
     tests_to_skip = TESTS_TO_SKIP_BY_VERSION.get(version, set())
     for filename in glob.glob('examples/*.py'):
         if filename in tests_to_skip:
-            continue
+            yield _testFailFile, filename
         else:
             yield _testFile, filename
 
@@ -97,3 +97,6 @@ def _testFile(original_filename):
             open(underscored_filename).read())
 
     nt.assert_equal(original_filename_output, underscored_filename_output)
+
+def _testFailFile(original_filename):
+    nt.assert_raises(Exception, _testFile, original_filename)
