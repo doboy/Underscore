@@ -343,7 +343,11 @@ class SourceGenerator(NodeVisitor):
             self.visit(node.type)
         if node.name:
             self.write(' as ')
-            self.visit(node.name)
+            # XXX: Python >= 3.0
+            if isinstance(node.name, str):
+                self.write(node.name)
+            else:
+                self.visit(node.name)
         self.write(':')
         self.body(node.body)
 
