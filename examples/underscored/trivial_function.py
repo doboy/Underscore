@@ -1,6 +1,6 @@
 #  def bar():
 #      pass
-#  
+#
 #  bar()
 
 def _():

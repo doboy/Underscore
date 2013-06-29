@@ -1,5 +1,5 @@
 #  y = True
-#  
+#
 #  assert y, "y is not true"
 
 (___,) = ('y is not true',)

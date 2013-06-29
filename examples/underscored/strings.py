@@ -2,7 +2,7 @@
 #  multi-
 #  lined- string!
 #  '''
-#  
+#
 #  y = 'c'
 #  z = x + y
 #  print(x, y, z)

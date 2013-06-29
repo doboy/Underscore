@@ -1,5 +1,5 @@
 #  import sys
-#  
+#
 #  print('uh oh hot dog')
 
 (__,) = ('uh oh hot dog',)

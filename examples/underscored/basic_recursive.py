@@ -3,7 +3,7 @@
 #          return 1
 #      else:
 #          return n * fact(n-1)
-#  
+#
 #  print(fact(5))
 
 (___, ____) = (1, 5)

@@ -96,5 +96,5 @@ class __(object):
     @staticmethod
     def _writeout_original(out, original_code):
         for line in original_code.splitlines():
-            out.write('#  ' + line + '\n')
+            out.write(('#  ' + line).rstrip() + '\n')
         out.write('\n')

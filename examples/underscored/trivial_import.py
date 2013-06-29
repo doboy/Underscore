@@ -1,5 +1,5 @@
 #  import ast
-#  
+#
 #  ast
 
 import ast as _

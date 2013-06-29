@@ -1,5 +1,5 @@
 #  from __future__ import with_statement
-#  
+#
 #  x = 1
 
 from __future__ import with_statement

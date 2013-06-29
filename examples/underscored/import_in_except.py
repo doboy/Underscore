@@ -2,7 +2,7 @@
 #      1/0
 #  except:
 #      import time
-#  
+#
 
 (__, ___) = (1, 0)
 try:
