@@ -1,3 +1,6 @@
+"""
+Tests the functionality of the '_'.
+"""
 import os
 import shutil
 import unittest
@@ -29,7 +32,7 @@ class BaseCompileTest(unittest.TestCase):
 
     def _(self, *args):
         _(*args)
-    
+
     # Python 2.6 compat
     class contextManager(object):
         def __init__(self, exception_type):
@@ -53,21 +56,21 @@ class SadPathCompileTest(BaseCompileTest):
     def testNonExistingSource(self):
         with self.assertRaises(ValueError) as e:
             self._(tmp('bar'))
-        self.assertEquals(str(e.exception), 
+        self.assertEquals(str(e.exception),
                           '_: %s: No such file or directory' % tmp('bar'))
 
     def testSourceSameAsDest(self):
         self.touch(tmp('car'))
         with self.assertRaises(ValueError) as e:
             self._(tmp('car'), tmp('car'))
-        self.assertEquals(str(e.exception), 
+        self.assertEquals(str(e.exception),
                           '_: %s and %s are the same location' % (
                 tmp('car'), tmp('car')))
 
         self.mkdir(tmp('far'))
         with self.assertRaises(ValueError) as e:
             self._(tmp('far'), tmp('far'))
-        self.assertEquals(str(e.exception), 
+        self.assertEquals(str(e.exception),
                           '_: %s and %s are the same location' % (
                 tmp('far'), tmp('far')))
 
@@ -77,9 +80,9 @@ class SadPathCompileTest(BaseCompileTest):
         assert os.path.isdir(tmp('zar'))
         with self.assertRaises(ValueError) as e:
             self._(tmp('zar'), tmp('foo.py'))
-        self.assertEquals(str(e.exception), 
+        self.assertEquals(str(e.exception),
                           '_: %s is a file, expected directory' % tmp('foo.py'))
-        
+
 class HappyPathCompileTest(BaseCompileTest):
     def testSimpleFileCompile(self):
         self.touch(tmp('nar.py'))
