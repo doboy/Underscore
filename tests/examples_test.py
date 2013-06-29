@@ -16,7 +16,6 @@ TESTS_TO_SKIP_BY_VERSION = {
     (3, 3): set([
             'examples/complex_signature.py',
             'examples/comprehension.py',
-            'examples/finnally.py',
             'examples/raise.py',
             'examples/try_example.py',
             ])

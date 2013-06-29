@@ -332,6 +332,11 @@ class SourceGenerator(NodeVisitor):
             self.newline(node)
             self.write('else:')
             self.body(node.orelse)
+        # XXX: python >= 3.0
+        if getattr(node, 'finalbody', []):
+            self.newline(node)
+            self.write('finally:')
+            self.body(node.finalbody)
 
     visit_Try = visit_TryExcept
 
