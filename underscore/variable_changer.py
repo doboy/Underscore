@@ -131,7 +131,6 @@ class VariableChanger(ast.NodeVisitor):
 
     def rename_arg(self, node):
         node.arg = self.get_new_name(node.arg)
-        assert False, ast.dump(node)
 
     def rename_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)

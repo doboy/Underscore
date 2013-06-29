@@ -432,6 +432,10 @@ class SourceGenerator(NodeVisitor):
             self.visit(node.kwargs)
         self.write(')')
 
+    # XXX: Python >= 3.0 only
+    def visit_arg(self, node):
+        self.write(node.arg)
+
     def visit_Name(self, node):
         self.write(node.id)
 

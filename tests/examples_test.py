@@ -14,23 +14,12 @@ from test_utils import execute
 
 TESTS_TO_SKIP_BY_VERSION = {
     (3, 3): set([
-            'examples/bases.py',
-            'examples/basic_recursive.py',
-            'examples/call.py',
-            'examples/class_method.py',
             'examples/complex_signature.py',
             'examples/comprehension.py',
             'examples/conditionally_existing_try.py',
-            'examples/decorator.py',
-            'examples/decorators.py',
             'examples/finnally.py',
-            'examples/function_arguments.py',
             'examples/import_in_except2.py',
-            'examples/lambda.py',
-            'examples/nested_functions.py',
             'examples/raise.py',
-            'examples/readme_example.py',
-            'examples/static_class_method.py',
             'examples/try_example.py',
             ])
 }
