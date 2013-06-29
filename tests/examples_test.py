@@ -1,3 +1,8 @@
+"""
+For each python file in the examples directory, verifies that the output
+of the original file matches the output of that file after going through
+the underscore compiler.
+"""
 import glob
 import os
 import sys
@@ -16,4 +21,3 @@ def _testFile(original_file):
     _(original_file, underscored_file, original=True)
     nt.assert_equal(execute(original_file),
                     execute(underscored_file))
-
