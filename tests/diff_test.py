@@ -7,9 +7,7 @@ from underscore import _
 from test_utils import execute
 
 def testGenerator():
-    major, minor = sys.version_info[:2]
-    version_tests = glob.glob('examples/*.py' + str(major) + '.' + str(minor))
-    for filename in glob.glob('examples/*.py') + version_tests:
+    for filename in glob.glob('examples/*.py'):
         yield _testFile, filename
 
 def _testFile(original_file):
