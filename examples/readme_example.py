@@ -1,11 +1,11 @@
 from operator import add
 
 class Fibber(object):
-    
+
     @staticmethod
     def fib(n):
         a, b = 0, 1
-        for i in xrange(n):
+        for i in range(n):
             a, b = b, add(a, b)
         return b
 

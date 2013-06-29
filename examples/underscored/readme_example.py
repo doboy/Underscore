@@ -5,14 +5,14 @@
 #      @staticmethod
 #      def fib(n):
 #          a, b = 0, 1
-#          for i in xrange(n):
+#          for i in range(n):
 #              a, b = b, add(a, b)
 #          return b
 #
 #  print(Fibber.fib(10))
 
 (___________, ____________, _____________) = (0, 1, 10)
-(________, _________, __________) = (object, xrange, staticmethod)
+(________, _________, __________) = (object, range, staticmethod)
 from operator import add as _
 
 
