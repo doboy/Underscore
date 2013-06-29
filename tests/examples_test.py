@@ -3,6 +3,7 @@ For each python file in the examples directory, verifies that the output
 of the original file matches the output of that file after going through
 the underscore compiler.
 """
+import ast
 import glob
 import os
 import sys
@@ -70,9 +71,29 @@ def testGenerator():
         else:
             yield _testFile, filename
 
-def _testFile(original_file):
-    underscored_file = os.path.join('examples', 'underscored',
-                               os.path.basename(original_file))
-    _(original_file, underscored_file, original=True)
-    nt.assert_equal(execute(original_file),
-                    execute(underscored_file))
+def dump_ast(filename):
+    with open(filename, "r") as fh:
+        return ast.dump(
+            ast.parse(fh.read()),
+            annotate_fields=True,
+            include_attributes=True)
+
+def _testFile(original_filename):
+    underscored_filename = os.path.join('examples', 'underscored',
+                               os.path.basename(original_filename))
+    _(original_filename, underscored_filename, original=True)
+
+    try:
+        original_filename_output = execute(original_filename)
+    except:
+        raise Exception(str(dump_ast(original_filename)))
+
+    try:
+        underscored_filename_output = execute(underscored_filename)
+    except:
+        exc_type, value = sys.exc_info()[:2]
+        raise Exception(
+            str(dump_ast(original_filename)) + '\n\n' +
+            open(underscored_filename).read())
+
+    nt.assert_equal(original_filename_output, underscored_filename_output)

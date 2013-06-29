@@ -1,3 +1,4 @@
+import ast
 import sys
 import warnings
 
@@ -8,8 +9,8 @@ except:
     from io import StringIO
 
 # Python 3 does not have execfile, so just create one
-def xfile(afile, globalz=None, localz=None):
-    with open(afile, "r") as fh:
+def xfile(filename, globalz=None, localz=None):
+    with open(filename, "r") as fh:
         exec(fh.read(), globalz, localz)
 
 def execute(filename):
