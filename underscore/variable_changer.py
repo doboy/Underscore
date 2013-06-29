@@ -78,6 +78,15 @@ class VariableChanger(ast.NodeVisitor):
         with self.env.Frame(node) as f:
             self.generic_visit(node)
 
+    def visit_Call(self, node):
+        self.generic_rename(node.func)
+
+        for arg in node.args:
+            if isinstance(arg, ast.Name):
+                self.generic_rename(arg)
+            else:
+                self.generic_visit(arg)
+
     def visit_arguments(self, node):
         self.generic_rename(node)
 
@@ -122,6 +131,10 @@ class VariableChanger(ast.NodeVisitor):
 
     def rename_Name(self, node):
         node.id = self.get_new_name(node.id)
+
+    def rename_arg(self, node):
+        node.arg = self.get_new_name(node.arg)
+        assert False, ast.dump(node)
 
     def rename_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)

@@ -94,7 +94,14 @@ class VariableFinder(ast.NodeVisitor):
         self.generic_visit(node)
         assert node == self._conditional_stack.pop()
 
+    @also('visit_withitem')
     def visit_With(self, node):
+        # XXX: Python >= 3, each with statement can have multiple with items
+        if hasattr(node, 'items'):
+            for with_item in node.items:
+                self.generic_visit(with_item)
+
+
         if node.optional_vars:
             self.generic_declare(node.optional_vars)
 
@@ -139,6 +146,9 @@ class VariableFinder(ast.NodeVisitor):
 
     def declare_Name(self, node):
         self.generic_declare(node.id)
+
+    def declare_arg(self, node):
+        self.generic_declare(node.arg)
 
     @also('declare_Attribute')
     def declare_Subscript(self, node):
