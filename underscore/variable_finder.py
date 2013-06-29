@@ -97,7 +97,7 @@ class VariableFinder(ast.NodeVisitor):
             for with_item in node.items:
                 self.generic_visit(with_item)
 
-        if node.optional_vars:
+        if hasattr(node, 'optional_vars'):
             self.generic_declare(node.optional_vars)
 
         self.generic_visit(node)

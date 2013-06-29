@@ -32,7 +32,6 @@ TESTS_TO_SKIP_BY_VERSION = {
             'examples/readme_example.py',
             'examples/static_class_method.py',
             'examples/try_example.py',
-            'examples/with_example.py',
             ])
 }
 
