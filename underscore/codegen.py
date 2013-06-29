@@ -272,10 +272,24 @@ class SourceGenerator(NodeVisitor):
     def visit_With(self, node):
         self.newline(node)
         self.write('with ')
-        self.visit(node.context_expr)
-        if node.optional_vars is not None:
-            self.write(' as ')
-            self.visit(node.optional_vars)
+
+        # Python >= 3.0
+        if hasattr(node, 'items'):
+            for idx, with_item in enumerate(node.items):
+                if idx:
+                    self.write(', ')
+                self.visit(with_item.context_expr)
+                if with_item.optional_vars is not None:
+                    self.write(' as ')
+                    self.visit(with_item.optional_vars)
+
+
+        if hasattr(node, 'context_expr'):
+            self.visit(node.context_expr)
+            if node.optional_vars is not None:
+                self.write(' as ')
+                self.visit(node.optional_vars)
+
         self.write(':')
         self.body(node.body)
 
@@ -318,6 +332,8 @@ class SourceGenerator(NodeVisitor):
             self.newline(node)
             self.write('else:')
             self.body(node.orelse)
+
+    visit_Try = visit_TryExcept
 
     def visit_ExceptHandler(self, node):
         self.newline(node)
