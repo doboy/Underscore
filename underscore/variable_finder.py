@@ -3,10 +3,7 @@
 import ast
 from collections import deque
 
-from also import also, AlsoMetaClass
-
 class VariableFinder(ast.NodeVisitor):
-    __metaclass__ = AlsoMetaClass
 
     def __init__(self, env):
         self.env = env
@@ -40,12 +37,12 @@ class VariableFinder(ast.NodeVisitor):
         with self.env.extend_frame(node):
             self.visit_queue.append(node)
 
-    @also('visit_ClassDef')
-    @also('visit_FunctionDef')
     def new_scope(self, node):
         self.generic_declare(node.name)
         with self.env.extend_frame(node):
             self.visit_queue.append(node)
+
+    visit_ClassDef = visit_FunctionDef = new_scope
 
     def visit_ExceptHandler(self, node):
         if isinstance(node.name, ast.Name):
@@ -87,25 +84,25 @@ class VariableFinder(ast.NodeVisitor):
                 alias.asname = alias.name
             self.generic_declare(alias.asname)
 
-    @also('visit_While')
-    @also('visit_TryExcept')
     def visit_If(self, node):
         self._conditional_stack.append(node)
         self.generic_visit(node)
         assert node == self._conditional_stack.pop()
 
-    @also('visit_withitem')
+    visit_While = visit_TryExcept = visit_If
+
     def visit_With(self, node):
         # XXX: Python >= 3, each with statement can have multiple with items
         if hasattr(node, 'items'):
             for with_item in node.items:
                 self.generic_visit(with_item)
 
-
         if node.optional_vars:
             self.generic_declare(node.optional_vars)
 
         self.generic_visit(node)
+
+    visit_withitem = visit_With
 
     def scope_generators(self, generators):
         if generators:
@@ -125,11 +122,10 @@ class VariableFinder(ast.NodeVisitor):
         if decl:
             decl.delete = True
 
-    @also('visit_DictComp')
-    @also('visit_ListComp')
-    @also('visit_SetComp')
     def visit_Comprehensions(self, node):
         self.scope_generators(node.generators)
+
+    visit_DictComp = visit_ListComp = visit_SetComp = visit_Comprehensions
 
     def visit_comprehension(self, node):
         self.generic_declare(node.target)
@@ -150,12 +146,13 @@ class VariableFinder(ast.NodeVisitor):
     def declare_arg(self, node):
         self.generic_declare(node.arg)
 
-    @also('declare_Attribute')
     def declare_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)
 
-    @also('declare_List')
+    declare_Attribute = declare_Subscript
+
     def declare_Tuple(self, node):
         for element in node.elts:
             self.generic_declare(element)
 
+    declare_List = declare_Tuple

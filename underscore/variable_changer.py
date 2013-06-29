@@ -2,12 +2,9 @@
 
 import ast
 
-from also import also, AlsoMetaClass
-
 from assignment_manager import AssignmentManager
 
 class VariableChanger(ast.NodeVisitor):
-    __metaclass__ = AlsoMetaClass
 
     def __init__(self, env):
         self.env = env
@@ -39,14 +36,13 @@ class VariableChanger(ast.NodeVisitor):
             for expr in exprs:
                 self.visit(expr)
 
-    @also('visit_DictComp')
-    @also('visit_ListComp')
-    @also('visit_SetComp')
     def visit_Comprehensions(self, node):
         if hasattr(node, 'elt'):
             self.scope_generators([node.elt], node.generators)
         else:
             self.scope_generators([node.key, node.value], node.generators)
+
+    visit_SetComp = visit_ListComp = visit_DictComp = visit_Comprehensions
 
     def visit_Assign(self, node):
         for target in node.targets:
@@ -103,9 +99,10 @@ class VariableChanger(ast.NodeVisitor):
             if alias.name != '*':
                 alias.asname = self.get_new_name(alias.asname, is_imported=True)
 
-    @also('visit_Name')
     def visit_Global(self, node):
         self.generic_rename(node)
+
+    visit_Name = visit_Global
 
     def generic_rename(self, target):
         specific_rename = 'rename_' + type(target).__name__
@@ -139,9 +136,7 @@ class VariableChanger(ast.NodeVisitor):
     def rename_Subscript(self, node):
         ast.NodeVisitor.generic_visit(self, node)
 
-    @also('rename_List')
     def rename_Tuple(self, node):
         for element in node.elts:
             self.generic_rename(element)
-
-x = 1
+    rename_List = rename_Tuple

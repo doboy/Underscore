@@ -2,8 +2,6 @@
 
 import ast
 
-from also import also, AlsoMetaClass
-
 class VariableTransformer(ast.NodeTransformer):
     def __init__(self, env):
         self.env = env

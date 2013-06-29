@@ -2,10 +2,7 @@
 
 import ast
 
-from also import also, AlsoMetaClass
-
 class FutureFinder(ast.NodeVisitor):
-    __metaclass__ = AlsoMetaClass
 
     def __init__(self, env):
         self.future_import_nodes = []
