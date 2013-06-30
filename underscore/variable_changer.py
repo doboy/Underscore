@@ -78,8 +78,10 @@ class VariableChanger(ast.NodeVisitor):
         self.generic_rename(node.func)
 
         for arg in node.args:
-            if isinstance(arg, ast.Name):
-                self.generic_rename(arg)
+            specific_visit = 'visit_' + type(arg).__name__
+            visit_fn = getattr(self, specific_visit, None)
+            if visit_fn:
+                visit_fn(arg)
             else:
                 self.generic_visit(arg)
 
