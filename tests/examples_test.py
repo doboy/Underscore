@@ -51,6 +51,7 @@ def _testFile(original_filename):
     except:
         exc_type, value = sys.exc_info()[:2]
         raise Exception(
+            str(value) + '\n\n' +
             str(dump_ast(original_filename)) + '\n\n' +
             open(underscored_filename).read())
 
