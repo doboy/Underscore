@@ -13,7 +13,7 @@ from underscore import _
 from test_utils import execute
 
 TESTS_TO_SKIP_BY_VERSION = {
-    (3, 3): set([
+    (3,): set([
             'examples/complex_signature.py',
             'examples/try_example.py',
             ])
@@ -22,6 +22,7 @@ TESTS_TO_SKIP_BY_VERSION = {
 def testGenerator():
     version = major, minor = sys.version_info[:2]
     tests_to_skip = TESTS_TO_SKIP_BY_VERSION.get(version, set())
+    tests_to_skip |= TESTS_TO_SKIP_BY_VERSION.get((major,), set())
     for filename in glob.glob('examples/*.py'):
         if filename in tests_to_skip:
             yield _testFailFile, filename
