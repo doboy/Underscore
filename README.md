@@ -1,4 +1,4 @@
-Underscore  [![Build Status](https://secure.travis-ci.org/Doboy/Underscore.png?branch=master)](http://travis-ci.org/Doboy/Underscore)
+Underscore  [![Build Status](https://secure.travis-ci.org/huan/Underscore.png?branch=master)](http://travis-ci.org/Doboy/Underscore)
 ==========
 Obfuscating code by changing the variable names to underscores
 
