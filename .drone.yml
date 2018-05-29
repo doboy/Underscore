@@ -1,14 +1,15 @@
-build:
-  image: python:2
-  commands:
-    - echo build
+pipeline:
+  build:
+    image: python:2
+    commands:
+      - echo build
 
-test:
-  image: python:2
-  commands:
-    - echo test
+  test:
+    image: python:2
+    commands:
+      - echo test
 
-deploy:
-  image: python:2
-  commands:
-    - echo deploy
+  deploy:
+    image: python:2
+    commands:
+      - echo deploy
